@@ -18,9 +18,6 @@ namespace Assets.Scripts
         private static bool VERBOSE = true;
         
 
-        public float PlayerJumpSpeed = 0.5f;
-        public float PlayerRunSpeed = 0.1f;
-
         // All Controll Classes
         private static readonly HashSet<IController> AllControllers = new HashSet<IController>();
 

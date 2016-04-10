@@ -32,6 +32,8 @@ Der Vorteil dieses Systems ist die Möglichkeit jegliche Eingabemöglichkeit "an
 Die Methode KinectInputController.HandleKinectInput(string kinectInput) nimmt Strings entgegen und steuert das komplette Spiel.
 Woher diese kommen - von einem Tastaturcontroller, der einen Befehl triggert, einer Maus oder einer Kinect ist irrelevant.
 
+In der Application Class werden alle Models, Views und Controllers erstellt und an miteinander bekanntgemacht und sozusagen "verheiratet" um sicherzustellen, dass auch wirklich nur jeweils eine Instanz der Klasse vorhanden ist.
+Dort werden auch alle Controller gesammelt und deren Update() Methode getriggert.
 
 ---
 

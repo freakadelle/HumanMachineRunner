@@ -9,11 +9,16 @@ namespace Assets.Scripts.View
         private GameObject _player;
         private PlayerModel _playerModel;
 
+        public float PlayerMoveSpeed;
+        public float PlayerJumpSpeed;
+
         // Use this for initialization
         public void Start ()
         {
             _playerModel = Application.GetPlayerModel();
             _player = GameObject.Find("ExamplePlayer");
+            _playerModel.PlayerForwardMove = 0.3f;
+            _playerModel.PlayerJumpSpeed = 9.81f;
         }
 	
         // Update is called once per frame

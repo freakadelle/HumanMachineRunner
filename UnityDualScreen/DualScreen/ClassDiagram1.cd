@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Multidisplay">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Multidisplay.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LevelView">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\View\LevelView.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.Application">
+    <Position X="2.5" Y="0.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAADAAAiCMEAAAgAAAAAAAAAAAAACAAAACAEA=</HashCode>
+      <FileName>Assets\Scripts\Application.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.View.PlayerView">
+    <Position X="5.75" Y="9.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAACAAAQACAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\View\PlayerView.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.Model.PlayerModel">
+    <Position X="5.75" Y="0.75" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Assets.Scripts.Model.PlayerModel.STATE">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Model\PlayerModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Assets.Scripts.Model.PlayerModel.LANE">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Model\PlayerModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAABAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Model\PlayerModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.Model.KinectInputModel">
+    <Position X="8.5" Y="0.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Assets.Scripts.Model.KinectInputModel.KINECTMOVE">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Model\KinectInputModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Model\KinectInputModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.Controller.PlayerController">
+    <Position X="5.75" Y="7" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAACAABAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Controller\PlayerController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Assets.Scripts.Controller.KinectInputController">
+    <Position X="8.5" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAABAAAAAEAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Controller\KinectInputController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Assets.Scripts.Controller.IController">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Controller\IController.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

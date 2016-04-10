@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Controller
 {
-    public class PlayerController {
+    public class PlayerController : IController {
 
         private readonly PlayerModel _playerModel;
         private readonly KinectInputModel _kinectInputModel;
@@ -43,16 +43,16 @@ namespace Assets.Scripts.Controller
                     throw new ArgumentOutOfRangeException("PlayerController " + "Wrong HandleInput value");
             }
         }
-
-
-        public void Update(float playerForwardMove, float playerJumpSpeed)
+        
+        // From Interface
+        public void Update()
         {
-            _playerModel.PlayerPositionVector3 += Vector3.forward * playerForwardMove;
+            _playerModel.PlayerPositionVector3 += Vector3.forward * _playerModel.PlayerForwardMove;
 
             // check if jump -> jump -> reset PlayerState to Standing
             if (_playerModel.CurrentPlayerState == PlayerModel.STATE.STATE_JUMPING)
             {
-                _playerModel.PlayerPositionVector3 += Vector3.up * playerJumpSpeed;
+                _playerModel.PlayerPositionVector3 += Vector3.up * _playerModel.PlayerForwardMove;
                 // TODO: PLAY ANIMATION -> ON STOP RESET PLAYER STATE
             }
         }

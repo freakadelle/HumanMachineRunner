@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Controller;
+﻿using System.Collections.Generic;
+using System.Threading;
+using Assets.Scripts.Controller;
 using Assets.Scripts.Model;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,15 +21,23 @@ namespace Assets.Scripts
         public float PlayerJumpSpeed = 0.5f;
         public float PlayerRunSpeed = 0.1f;
 
+        // All Controll Classes
+        private static readonly HashSet<IController> AllControllers = new HashSet<IController>();
+
         public void Start () {
+            // Register all Controller
+            AllControllers.Add(_playerController);
+            AllControllers.Add(_kinectInputController);
         }
 	
 
         private void Update () {
         
-            // UPDATE METHODES from CONTROLLER
-            _playerController.Update(PlayerRunSpeed , PlayerJumpSpeed);
-            _kinectInputController.Update();
+            // calls all update() methods from all classes that implement the IController Interface
+            foreach (var controller in AllControllers)
+            {
+                controller.Update();
+            }
 
 
             if (VERBOSE)

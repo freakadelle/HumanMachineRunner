@@ -32,5 +32,8 @@ namespace Assets.Scripts.Model
 
         public Vector3 PlayerPositionVector3 { get; set; }
 
+        public float PlayerForwardMove { get; set; }
+        public float PlayerJumpSpeed { get; set; }
+
     }
 }

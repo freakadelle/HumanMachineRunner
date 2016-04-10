@@ -4,7 +4,7 @@ using Assets.Scripts.Model;
 
 namespace Assets.Scripts.Controller
 {
-    public class KinectInputController {
+    public class KinectInputController : IController {
 
         private readonly KinectInputModel _kinectInputModel;
         private readonly PlayerController _playerController;
@@ -49,9 +49,10 @@ namespace Assets.Scripts.Controller
             }
         }
 
+        // From Interface
         public void Update()
         {
-            
+           
         }
     }
 }

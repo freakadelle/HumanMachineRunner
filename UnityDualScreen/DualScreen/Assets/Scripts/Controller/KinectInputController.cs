@@ -6,8 +6,8 @@ namespace Assets.Scripts.Controller
 {
     public class KinectInputController : IController {
 
-        private readonly KinectInputModel _kinectInputModel;
-        private readonly PlayerController _playerController;
+        private  KinectInputModel _kinectInputModel;
+        private  PlayerController _playerController;
 
         public KinectInputController(KinectInputModel kinectInputModel, PlayerController playerController)
         {
@@ -21,30 +21,22 @@ namespace Assets.Scripts.Controller
             {
                 default:
                     _kinectInputModel.Kinectmove= KinectInputModel.KINECTMOVE.KINNECTMOVE_IDLE;
-                    _playerController.HandleInput();
                     break;
                 case "jump":
                     if (_kinectInputModel.Kinectmove != KinectInputModel.KINECTMOVE.KINNECTMOVE_JUMPING)
-                    {
                         _kinectInputModel.Kinectmove = KinectInputModel.KINECTMOVE.KINNECTMOVE_JUMPING;
-                        _playerController.HandleInput();
-                    }
                     break;
                 case "duck":
                     if (_kinectInputModel.Kinectmove != KinectInputModel.KINECTMOVE.KINNECTMOVE_DUCKING)
-                    {
                         _kinectInputModel.Kinectmove = KinectInputModel.KINECTMOVE.KINNECTMOVE_DUCKING;
-                        _playerController.HandleInput();
-                    }
-                   
                     break;
                 case "left":
-                    _kinectInputModel.Kinectmove = KinectInputModel.KINECTMOVE.KINNECTMOVE_LANELEFT;
-                    _playerController.HandleInput();
+                    if (_kinectInputModel.Kinectmove != KinectInputModel.KINECTMOVE.KINNECTMOVE_LANELEFT) 
+                        _kinectInputModel.Kinectmove = KinectInputModel.KINECTMOVE.KINNECTMOVE_LANELEFT;
                     break;
                 case "right":
-                    _kinectInputModel.Kinectmove = KinectInputModel.KINECTMOVE.KINECTMOVE_LANERIGHT;
-                    _playerController.HandleInput();
+                    if (_kinectInputModel.Kinectmove != KinectInputModel.KINECTMOVE.KINECTMOVE_LANERIGHT)
+                        _kinectInputModel.Kinectmove = KinectInputModel.KINECTMOVE.KINECTMOVE_LANERIGHT;
                     break;
             }
         }
@@ -52,7 +44,8 @@ namespace Assets.Scripts.Controller
         // From Interface
         public void Update()
         {
-           
+            // needed - if HandleKinectInput() is calling HandleInput() if KinctMove State changes it breaks - lags :(
+            _playerController.HandleInput();
         }
     }
 }

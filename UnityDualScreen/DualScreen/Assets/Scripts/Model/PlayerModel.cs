@@ -20,20 +20,22 @@ namespace Assets.Scripts.Model
             LANE_RIGHT
         }
         
-        public PlayerModel(STATE currentPlayerState, LANE currentPlayerLane, Vector3 playerPositionVector3)
+        public PlayerModel(STATE currentPlayerState, LANE currentPlayerLane, Transform playerPositionTransform)
         {
             CurrentPlayerState = currentPlayerState;
             CurrentPlayerLane = currentPlayerLane;
-            PlayerPositionVector3 = playerPositionVector3;
+            PlayerPositionTransform = playerPositionTransform;
         }
 
         public STATE CurrentPlayerState { get; set; }
         public LANE CurrentPlayerLane { get; set; }
 
-        public Vector3 PlayerPositionVector3 { get; set; }
-
+        public Transform PlayerPositionTransform { get; set; }
         public float PlayerForwardMove { get; set; }
-        public float PlayerJumpSpeed { get; set; }
-
+        public float PlayerJumpSpeedPerFrame { get; set; }
+        public float PlayerMaxJumpHeight { get; set; }
+        public float PlayerHeight { get; set; }
+        
+      
     }
 }

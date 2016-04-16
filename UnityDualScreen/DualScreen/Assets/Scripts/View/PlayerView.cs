@@ -10,22 +10,29 @@ namespace Assets.Scripts.View
         private PlayerModel _playerModel;
 
         public float PlayerMoveSpeed;
-        public float PlayerJumpSpeed;
+        public float PlayerJumpSpeedPerFrame;
+        public float PlayerMaxJumpHeight; // TODO: Set Gravitation in Level Model
+        public float PlayerHeight;
 
         // Use this for initialization
         public void Start ()
         {
             _playerModel = Application.GetPlayerModel();
-            _player = GameObject.Find("ExamplePlayer");
-            _playerModel.PlayerForwardMove = 0.3f;
-            _playerModel.PlayerJumpSpeed = 9.81f;
+            _playerModel.PlayerForwardMove = PlayerMoveSpeed;
+            _playerModel.PlayerJumpSpeedPerFrame = PlayerJumpSpeedPerFrame;
+            _playerModel.PlayerMaxJumpHeight = PlayerMaxJumpHeight;
+            _playerModel.CurrentPlayerState = PlayerModel.STATE.STATE_STANDING;
+            // _playerModel.PlayerPositionTransform.position = Vector3.zero;
+            _playerModel.PlayerHeight = PlayerHeight;
+         //   _playerModel.PlayerCharacterController = GetComponent<CharacterController>();
         }
 	
         // Update is called once per frame
         public void Update ()
         {
-            // Always RUN
-            _player.transform.position = _playerModel.PlayerPositionVector3;
+            // update position
+            transform.position = _playerModel.PlayerPositionTransform.position;
+           
         }
     }
 }

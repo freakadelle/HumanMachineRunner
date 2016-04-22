@@ -1,14 +1,70 @@
-﻿using System;
-using Assets.Scripts.Model;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Assets.Scripts.Controller
+namespace Assets.Scripts
 {
-    public class PlayerController : IController {
+    public class PlayerController : MonoBehaviour
+    {
 
+        public float CharacterJumpSpeed = 8f;
+        public float CharacterWalkSpeed = 6f;
+        public float LevelGravity = 20.0f;
+
+        private CharacterController _characterController;
+        private Vector3 _moveDirection = Vector3.zero;
+
+        public void Start()
+        {
+            _characterController = GetComponent<CharacterController>();
+        }
+
+       
+        void Update()
+        {
+            Debug.Log(KinectInputStateMachine.KinectMoveState);
+
+            if (_characterController.isGrounded)
+            {
+                // Always move in z
+                var moveSpeed = CharacterWalkSpeed*Time.deltaTime;
+                _moveDirection = new Vector3(0, 0, moveSpeed);
+
+                switch (KinectInputStateMachine.KinectMoveState)
+                {
+                    case KinectInputStateMachine.AvatarMove.KINNECTMOVE_JUMPING:
+                            _moveDirection.y = CharacterJumpSpeed;
+                        break;
+                    case KinectInputStateMachine.AvatarMove.KINNECTMOVE_DUCKING:
+                            _moveDirection.y = -0.5f;
+                        break;
+                    case KinectInputStateMachine.AvatarMove.KINECTMOVE_LANERIGHT:
+                        _moveDirection.x = moveSpeed * Time.deltaTime;
+                        break;
+                    case KinectInputStateMachine.AvatarMove.KINNECTMOVE_LANEMIDDLE:
+                        _moveDirection.x = moveSpeed * Time.deltaTime;
+                        break;
+                    case KinectInputStateMachine.AvatarMove.KINNECTMOVE_LANELEFT:
+                        _moveDirection.x = moveSpeed * Time.deltaTime;
+                        break;
+                    default:
+                        break;
+                }
+
+                _moveDirection = transform.TransformDirection(_moveDirection);
+                _moveDirection *= CharacterWalkSpeed;
+
+
+            }
+
+            KinectInputStateMachine.KinectMoveState = KinectInputStateMachine.AvatarMove.KINNECTMOVE_IDLE;
+
+
+            _moveDirection.y -= LevelGravity * Time.deltaTime;
+            //_moveDirection.x -= LevelGravity * Time.deltaTime;
+            _characterController.Move(_moveDirection * Time.deltaTime);
+        }
+        /*
         private readonly PlayerModel _playerModel;
-        private readonly KinectInputModel _kinectInputModel;
-
+        
         public static bool IsJumping;
 
         double TOLERANCE = 0.01;
@@ -26,31 +82,31 @@ namespace Assets.Scripts.Controller
             switch (_kinectInputModel.Kinectmove)
             {
                 // Moves
-                case KinectInputModel.KINECTMOVE.KINNECTMOVE_IDLE:
+                case KinectInputModel.AvatarMove.KINNECTMOVE_IDLE:
                     _playerModel.CurrentPlayerState = PlayerModel.STATE.STATE_STANDING;
                     break;
-                case KinectInputModel.KINECTMOVE.KINNECTMOVE_JUMPING:
+                case KinectInputModel.AvatarMove.KINNECTMOVE_JUMPING:
                     _playerModel.CurrentPlayerState = PlayerModel.STATE.STATE_JUMPING;
                     break;
-                case KinectInputModel.KINECTMOVE.KINNECTMOVE_DUCKING:
+                case KinectInputModel.AvatarMove.KINNECTMOVE_DUCKING:
                     _playerModel.CurrentPlayerState = PlayerModel.STATE.STATE_DUCKING;
                     break;
 
                 // Lanes
-                case KinectInputModel.KINECTMOVE.KINECTMOVE_LANERIGHT:
+                case KinectInputModel.AvatarMove.KINECTMOVE_LANERIGHT:
                     if (_playerModel.CurrentPlayerLane != PlayerModel.LANE.LANE_RIGHT)
                     {
                         // Reset KinectMove
-                        _kinectInputModel.Kinectmove = KinectInputModel.KINECTMOVE.KINNECTMOVE_IDLE;
+                        _kinectInputModel.Kinectmove = KinectInputModel.AvatarMove.KINNECTMOVE_IDLE;
                         _playerModel.CurrentPlayerLane++;
                     }
                     
                     break;
-                case KinectInputModel.KINECTMOVE.KINNECTMOVE_LANELEFT:
+                case KinectInputModel.AvatarMove.KINNECTMOVE_LANELEFT:
                     if (_playerModel.CurrentPlayerLane != PlayerModel.LANE.LANE_LEFT)
                     {
                         // Reset KinectMove
-                        _kinectInputModel.Kinectmove = KinectInputModel.KINECTMOVE.KINNECTMOVE_IDLE;
+                        _kinectInputModel.Kinectmove = KinectInputModel.AvatarMove.KINNECTMOVE_IDLE;
                         _playerModel.CurrentPlayerLane--;
                     }
                     break;
@@ -139,12 +195,15 @@ namespace Assets.Scripts.Controller
             if (!(_playerModel.PlayerPositionTransform.transform.position.y <= _playerModel.PlayerHeight) || IsJumping) return;
 
             // Reset Kinect State
-            _kinectInputModel.Kinectmove = KinectInputModel.KINECTMOVE.KINNECTMOVE_IDLE;
+            _kinectInputModel.Kinectmove = KinectInputModel.AvatarMove.KINNECTMOVE_IDLE;
         }
  
         private void MoveForward()
         {
             _playerModel.PlayerPositionTransform.Translate(Vector3.forward * _playerModel.PlayerForwardMove * Time.deltaTime);
         }
+    }
+
+    */
     }
 }

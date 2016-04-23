@@ -12,7 +12,7 @@ namespace Assets.Scripts
             {
                 AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Jumping;
             }
-            if (Input.GetKeyDown(KeyCode.LeftControl))
+            if (Input.GetKey(KeyCode.LeftControl))
             {
                 AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Ducking;
             }

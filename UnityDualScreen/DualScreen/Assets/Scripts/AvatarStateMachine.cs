@@ -14,6 +14,7 @@
             Left,
             Middle,
             Right,
+            Idle,
         }
 
         public static AvatarMove AvatarMoveState { get; set; }

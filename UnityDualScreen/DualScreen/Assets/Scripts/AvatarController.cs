@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -13,6 +14,8 @@ namespace Assets.Scripts
 
         private CharacterController _characterController;
         private Vector3 _moveDirection = Vector3.zero;
+
+        private const double _tolerance = 0.00;
 
         public void Start()
         {
@@ -48,7 +51,7 @@ namespace Assets.Scripts
             _setAvatarMoveStateToIdle();
 
             _moveDirection.y -= LevelGravity * Time.deltaTime;
-            //_moveDirection.x -= LevelGravity * Time.deltaTime;
+
             _characterController.Move(_moveDirection * Time.deltaTime);
         }
 
@@ -67,15 +70,17 @@ namespace Assets.Scripts
                     break;
             }
         }
-
-
-        // TODO: Fix this to prevent player bouncing left & right in one lane
         private void _setMoveDirectionWithinLaneSwitch(int arrayIndex)
         {
-            if (gameObject.transform.position.x < AvatarLanePositionFloats[arrayIndex])
-                _moveDirection.x = AvatarWalkSpeed * Time.deltaTime;
-            if (gameObject.transform.position.x > AvatarLanePositionFloats[arrayIndex])
-                _moveDirection.x = -(AvatarWalkSpeed * Time.deltaTime);
+
+                if (gameObject.transform.position.x < AvatarLanePositionFloats[arrayIndex])
+                    _moveDirection.x = AvatarWalkSpeed * Time.deltaTime;
+                else if (gameObject.transform.position.x > AvatarLanePositionFloats[arrayIndex])
+                    _moveDirection.x = -(AvatarWalkSpeed * Time.deltaTime);
+                // probably not needed - but without avatar is sometimes stuck in the middle
+                else if(Math.Abs(gameObject.transform.position.x - AvatarLanePositionFloats[arrayIndex]) < _tolerance)
+                    AvatarStateMachine.AvatarLaneState = AvatarStateMachine.AvatarLane.Idle;
+           
         }
 
         private void _avatarMovement()
@@ -84,9 +89,13 @@ namespace Assets.Scripts
             {
                 case AvatarStateMachine.AvatarMove.Jumping:
                     _moveDirection.y = AvatarJumpSpeed;
-                    break;
+                    break;                  
                 case AvatarStateMachine.AvatarMove.Ducking:
-                    _moveDirection.y = -0.5f;
+                    gameObject.transform.localScale = new Vector3(1, 0.5f, 1);  // TODO: fix this in final build!
+                    break;
+                case AvatarStateMachine.AvatarMove.Idle:
+                    // TODO: Fix this in final build. Right now this is neccessary for duck.
+                    gameObject.transform.localScale = Vector3.one;
                     break;
             }
         }

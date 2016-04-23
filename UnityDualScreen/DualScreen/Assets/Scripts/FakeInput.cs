@@ -6,29 +6,39 @@ namespace Assets.Scripts
     {
        
         // Update is called once per frame
-        private void Update ()
+        public void Update ()
         {
             if (Input.GetKey(KeyCode.Space))
             {
-                KinectInputStateMachine.KinectMoveState = KinectInputStateMachine.KINECTMOVE.KINNECTMOVE_JUMPING;
+                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Jumping;
             }
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
-                KinectInputStateMachine.KinectMoveState = KinectInputStateMachine.KINECTMOVE.KINNECTMOVE_DUCKING;
+                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Ducking;
             }
-            if (Input.GetKey(KeyCode.A) && KinectInputStateMachine.KinectMoveState != KinectInputStateMachine.KINECTMOVE.KINNECTMOVE_LANELEFT)
+            if (Input.GetKeyUp(KeyCode.A))
             {
-                if(KinectInputStateMachine.KinectMoveState == KinectInputStateMachine.KINECTMOVE.KINNECTMOVE_LANEMIDDLE)
-                    KinectInputStateMachine.KinectMoveState = KinectInputStateMachine.KINECTMOVE.KINNECTMOVE_LANELEFT;
-                if(KinectInputStateMachine.KinectMoveState == KinectInputStateMachine.KINECTMOVE.KINECTMOVE_LANERIGHT)
-                    KinectInputStateMachine.KinectMoveState = KinectInputStateMachine.KINECTMOVE.KINNECTMOVE_LANEMIDDLE;
+                switch (AvatarStateMachine.AvatarLaneState)
+                {
+                    case AvatarStateMachine.AvatarLane.Middle:
+                        AvatarStateMachine.AvatarLaneState = AvatarStateMachine.AvatarLane.Left;
+                        break;
+                        case AvatarStateMachine.AvatarLane.Right:
+                        AvatarStateMachine.AvatarLaneState = AvatarStateMachine.AvatarLane.Middle;
+                        break;
+                }
             }
-            if (Input.GetKey(KeyCode.D) && KinectInputStateMachine.KinectMoveState != KinectInputStateMachine.KINECTMOVE.KINECTMOVE_LANERIGHT)
+            if (Input.GetKeyUp(KeyCode.D))
             {
-                if (KinectInputStateMachine.KinectMoveState == KinectInputStateMachine.KINECTMOVE.KINNECTMOVE_LANEMIDDLE)
-                    KinectInputStateMachine.KinectMoveState = KinectInputStateMachine.KINECTMOVE.KINECTMOVE_LANERIGHT;
-                if (KinectInputStateMachine.KinectMoveState == KinectInputStateMachine.KINECTMOVE.KINNECTMOVE_LANELEFT)
-                    KinectInputStateMachine.KinectMoveState = KinectInputStateMachine.KINECTMOVE.KINNECTMOVE_LANEMIDDLE;
+                switch (AvatarStateMachine.AvatarLaneState)
+                {
+                    case AvatarStateMachine.AvatarLane.Middle:
+                        AvatarStateMachine.AvatarLaneState = AvatarStateMachine.AvatarLane.Right;
+                        break;
+                    case AvatarStateMachine.AvatarLane.Left:
+                        AvatarStateMachine.AvatarLaneState = AvatarStateMachine.AvatarLane.Middle;
+                        break;
+                }
             }
         }
     }

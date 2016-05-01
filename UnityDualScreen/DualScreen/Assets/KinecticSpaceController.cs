@@ -21,6 +21,8 @@ public class KinecticSpaceController : MonoBehaviour
         this._evaluator = new DefaultKinectGestureEvaluator(dataPath);
 
         this._evaluator.AddGesture("Jump");
+        this._evaluator.AddGesture("test");
+        this._evaluator.AddGesture("test_3");
         //this._evaluator.AddGesture("stierr");
 
         this._evaluator.Start();

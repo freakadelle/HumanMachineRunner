@@ -1,0 +1,23 @@
+KinecticSpaceController
+	--> DefaultKinectGestureEvaluator: 
+	{Kann Gesten Erkennen, neue hinzufügen, entfernen, Erkennung stoppen
+	und starten, }
+	
+		--> DataManager
+		{Legt die Verzeichnisstruktur für Gesten an. Kann auf Gesten-Dateien zugreifen. Kann Gesten abspeichern}
+		
+		--> GestureEvaluator
+		{Hat Zugriff auf den GestureManager und somit auch auf die Liste mit Gesten. Enthällt den RingBuffer}
+		
+			--> GestureManager
+			
+		--> GestureManager
+		{Legt Anzahl an Gesten fest. MaxFrames für eine Geste. Besitzt eine Liste mit Gesten, die mit Gesten befüllt und wieder entfüllt werden kann. }
+		
+		--> DefaultKinectSource
+		{Hat Zugriff auf den Kinect Sensor. Kann zur Kinect verbinden und trennen. }
+		
+			--> KinectSensor
+			{AudioSource, BodySource, FrameSource}
+			
+		--> List<Gesture, GestureStats>

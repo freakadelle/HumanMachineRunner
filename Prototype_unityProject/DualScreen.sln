@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DualScreen.CSharp.Plugins", "DualScreen.CSharp.Plugins.csproj", "{BDA21163-3AD5-2283-083E-B664D72E0C9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DualScreen.CSharp", "DualScreen.CSharp.csproj", "{4A571310-37EB-B30C-142A-0941F1C8B644}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DualScreen.CSharp.Editor", "DualScreen.CSharp.Editor.csproj", "{6367FCA7-5DB9-7BE6-F81F-6CC60442D444}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDA21163-3AD5-2283-083E-B664D72E0C9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDA21163-3AD5-2283-083E-B664D72E0C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDA21163-3AD5-2283-083E-B664D72E0C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDA21163-3AD5-2283-083E-B664D72E0C9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A571310-37EB-B30C-142A-0941F1C8B644}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A571310-37EB-B30C-142A-0941F1C8B644}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A571310-37EB-B30C-142A-0941F1C8B644}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A571310-37EB-B30C-142A-0941F1C8B644}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6367FCA7-5DB9-7BE6-F81F-6CC60442D444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6367FCA7-5DB9-7BE6-F81F-6CC60442D444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6367FCA7-5DB9-7BE6-F81F-6CC60442D444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6367FCA7-5DB9-7BE6-F81F-6CC60442D444}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

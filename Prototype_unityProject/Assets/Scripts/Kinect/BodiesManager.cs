@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Windows.Kinect;
@@ -21,8 +22,8 @@ public class BodiesManager
     private List<Body> bodyList;
 
     private int initFrames;
-    private int initFramesCap = 30;
-    private double initTolerance = 0.06;
+    private int initFramesCap = 25;
+    private double initTolerance = 0.07;
 
     private int activeIndex;
     private bodiesState state;
@@ -51,6 +52,7 @@ public class BodiesManager
         //Todo: Referenz lässt sich nicht speichern. Muss jedes mal neu abgelegt werden!
         bodyList = _src;
 
+        //Es lässt sich keine Referenz auf bodyList setzen, deshalb muss jedes mal activeSource neu gesetzt werden.
         if (State == bodiesState.SINGLE_SOURCE || State == bodiesState.INITIALIZE_SOURCE)
         {
             activeSource = bodyList[activeIndex];
@@ -63,7 +65,11 @@ public class BodiesManager
         }
         else if(State != bodiesState.NO_DATA)
         {
+            //Get amount of tracked bodies
             int trackedBodies = numberOfBodiesTracked();
+
+            Debug.Log(trackedBodies);
+
             if (trackedBodies > 1 && state != bodiesState.MULTIPLE_SOURCES)
             {
                 State = bodiesState.MULTIPLE_SOURCES;

@@ -127,8 +127,9 @@ public class KinectInputController : MonoBehaviour
         }
 
         Vector3 tempPos = playerTransform.localPosition;
+        tempPos.z += 0.01f;
         tempPos.x = _bm.getActJointPos(JointType.SpineMid).X * 2;
-        tempPos.y = (_bm.getActJointPos(JointType.Neck).Y * 20f) - 6;
+        tempPos.y = (_bm.getActJointPos(JointType.Neck).Y * 4) - 1;
 
         playerTransform.localPosition = tempPos;
 

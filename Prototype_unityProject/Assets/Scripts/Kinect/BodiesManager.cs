@@ -21,7 +21,7 @@ public class BodiesManager
     public Body referenceSource;
     private List<Body> bodyList;
 
-    private int initFrames;
+    public int initFrames;
     private int initFramesCap = 25;
     private double initTolerance = 0.1;
 

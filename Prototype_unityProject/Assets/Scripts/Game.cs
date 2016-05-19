@@ -1,37 +1,85 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
+using System.IO;
+using Assets.Scripts;
 
-public static class Game {
+public class Game : MonoBehaviour {
 
-    public static bool isRunning = false;
-    //private static bool isPaused = false;
-    private static bool isPreparing = false;
-    private static bool isInitialized = false;
-    public static int secondsUntilGameStart = 4;
-    private static DateTime startTime;
-    private static DateTime startPrepareTime;
-    private static DateTime actTime;
+    //Serialize Fields
+    [SerializeField(), Range(0,10)]
+    public int secondsUntilGameStart;
 
-    private static Text elapsedTimeView = GameObject.Find("ElapsedTime").GetComponent<Text>();
-    private static Text highscoreView = GameObject.Find("Highscore").GetComponent<Text>();
-    private static Text warningView = GameObject.Find("Init").GetComponent<Text>();
+    //GameStates
+    public bool isRunning;
+    public bool isPaused;
+    private bool isPreparing = false;
+    private bool isInitialized = false;
+    
+    //Timer variables
+    private DateTime startTime;
+    private DateTime startPrepareTime;
+    private DateTime actTime;
 
-    public static Player player;
+    public HUD_View view;
 
-    static Game()
+    private KinectInputController kinectController;
+    public AvatarController avatarController;
+
+    private Player player;
+
+    
+    //--------------------------------
+    //MONOBEHAVIOUR IMPLEMENT METHODS
+    //--------------------------------
+
+    void OnApplicationQuit()
     {
-        Debug.Log("-- GAME PRE-INITIALIZE --");
-        warningView.enabled = true;
-        elapsedTimeView.enabled = false;
-        highscoreView.enabled = false;
-
-        warningView.text = "Waiting for player!";
+        kinectController.Stop();
     }
 
-    public static void update()
+    void Awake()
     {
+        kinectController = new KinectInputController(Path.Combine(Application.dataPath, "data"));
+
+        //Build some hardcoded Gestures
+        kinectController.addHardCodeGesture(new JumpGesture());
+        kinectController.addHardCodeGesture(new CrouchGesture());
+
+        //Add gestures from KineticSpace per file
+        kinectController.AddGesture("bend_right");
+        kinectController.AddGesture("bend_left");
+
+        //KinectController Events
+        kinectController.KinectStateChanged += OnKinectStateChanged;
+        kinectController.KinectStateUpdate += OnKinectStateUpdate;
+
+        kinectController.Start();
+
+        avatarController.enabled = false;
+
+        Debug.Log("-- GAME PRE-INITIALIZE --");
+    }
+
+    void Start()
+    {
+        view.warningView.enabled = true;
+        view.elapsedTimeView.enabled = false;
+        view.highscoreView.enabled = false;
+
+        view.warningView.text = "Waiting for player!";
+
+        player = new Player();
+
+        isInitialized = true;
+
+        Debug.Log("-- GAME INITIALIZED --");
+    }
+
+    void Update()
+    {
+        kinectController.update();
+
+        //Handle Game States
         actTime = DateTime.Now;
 
         if (isRunning)
@@ -39,8 +87,8 @@ public static class Game {
             TimeSpan t = actTime - startTime;
             player.score(13);
 
-            elapsedTimeView.text = t.Seconds.ToString("##") + ":" + t.Milliseconds.ToString("##");
-            highscoreView.text = player.highscore + " Pt.";
+            view.elapsedTimeView.text = t.Seconds.ToString("##") + ":" + t.Milliseconds.ToString("##");
+            view.highscoreView.text = player.highscore + " Pt.";
         }
         else if (isPreparing)
         {
@@ -48,9 +96,9 @@ public static class Game {
 
             if (t <= 0)
             {
-                warningView.enabled = false;
-                elapsedTimeView.enabled = true;
-                highscoreView.enabled = true;
+                view.warningView.enabled = false;
+                view.elapsedTimeView.enabled = true;
+                view.highscoreView.enabled = true;
                 isPreparing = false;
                 isRunning = true;
 
@@ -58,48 +106,104 @@ public static class Game {
             }
             else
             {
-                warningView.text = t.ToString();
+                view.warningView.text = t.ToString();
             }
         }
     }
 
-    public static void init()
+
+    //---------------------------
+    //KINECT INPUT EVENT LISTENER
+    //---------------------------
+
+
+    //Handle different Kinect states once per change State
+    private void OnKinectStateChanged(object sender, MyEvArgs<bodiesState> _data)
     {
-        //Todo: Method implementation. Player positioned correctly. General resets. etc.
+        bodiesState state = _data.data;
 
-        player = new Player();
-
-        isInitialized = true;
-        Debug.Log("-- GAME INITIALIZED --");
+        if (state == bodiesState.NO_ACTIVE_SOURCE)
+        {
+            //reset();
+            if (isRunning)
+            {
+                pause(true);
+            }
+        }
+        else if (state == bodiesState.SINGLE_SOURCE)
+        {
+            run();
+        }
+        else if (state == bodiesState.MULTIPLE_SOURCES)
+        {
+            pause(true);
+        }
+        else if (state == bodiesState.INITIALIZE_SOURCE)
+        {
+            pause(true);
+        }
     }
 
-    private static void prepare(bool _value)
+    //Handle different Kinect states every frame
+    private void OnKinectStateUpdate(object sender, MyEvArgs<bodiesState> _data)
+    {
+        bodiesState state = _data.data;
+
+        if (state == bodiesState.NO_ACTIVE_SOURCE)
+        {
+            //Every frame there is no body found, search for a new detected bodies
+            kinectController.bodiesManager.nextPossibleBody();
+        }
+        else if (state == bodiesState.SINGLE_SOURCE)
+        {
+            //If single source detected, than handle input from that source
+            kinectController.handleKineticSpaceGestures();
+            kinectController.handleHardCodeGestures();
+        }
+        else if (state == bodiesState.MULTIPLE_SOURCES)
+        {
+            //Todo: Was passiert bei multiple Sources
+        }
+        else if (state == bodiesState.INITIALIZE_SOURCE)
+        {
+            //If body detected, initialize player norms
+            kinectController.bodiesManager.initializeBody();
+        }
+    }
+
+
+    //---------------------
+    //GAME CONTROL METHODS
+    //---------------------
+
+    private void prepare(bool _value)
     {
         isPreparing = _value;
         startPrepareTime = DateTime.Now;
     }
 
-    public static void pause(bool _value, bool _prepare = true)
+    public void pause(bool _value, bool _prepare = true)
     {
+        avatarController.enabled = false;
         prepare(_prepare);
         isRunning = !_value && !_prepare;
         //isPaused = _value;
         Debug.Log("-- GAME PAUSED: " + _value + " --");
     }
 
-    public static void start(bool _prepare = true)
+    public void run(bool _prepare = true)
     {
-        if (isInitialized)
+        if (isPaused)
         {
             pause(false);
             prepare(_prepare);
         }
-        else if (!isInitialized)
-        {
-            init();
+        else if (!isRunning)
+        {    
             startTime = DateTime.Now;
             prepare(_prepare);
             isRunning = !_prepare;
+            avatarController.enabled = true;
             Debug.Log("-- GAME STARTED --");
         }
         else
@@ -108,7 +212,7 @@ public static class Game {
         }
     }
 
-    public static void stop()
+    public void stop()
     {
         startTime = new DateTime();
         actTime = new DateTime();
@@ -118,20 +222,20 @@ public static class Game {
         Debug.Log("-- GAME STOPPED --");
     }
 
-    public static void restart()
+    public void restart()
     {
         stop();
         //TODO: Method implementation
     }
 
-    public static void loose()
+    public void loose()
     {
         stop();
         Debug.Log("-- GAME LOOSE --");
         //TODO: Method implementation    
     }
 
-    public static void win()
+    public void win()
     {
         stop();
         Debug.Log("-- GAME WON --");

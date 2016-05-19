@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Player
 {
 
     public double highscore;
     public float fuel;
+
+    public Transform playTransform;
 
     public Player()
     {

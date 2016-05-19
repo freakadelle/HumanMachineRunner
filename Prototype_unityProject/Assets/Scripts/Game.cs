@@ -10,8 +10,10 @@ public class Game : MonoBehaviour {
     public int secondsUntilGameStart;
 
     //GameStates
+    // TODO: Refactor to Enums
     public bool isRunning;
     public bool isPaused;
+    // TODO: Initialize vars within start()!
     private bool isPreparing = false;
     private bool isInitialized = false;
     
@@ -68,6 +70,7 @@ public class Game : MonoBehaviour {
 
         view.warningView.text = "Waiting for player!";
 
+        // TODO: Player already exists as avatar prefab 
         player = new Player();
 
         isInitialized = true;
@@ -82,6 +85,7 @@ public class Game : MonoBehaviour {
         //Handle Game States
         actTime = DateTime.Now;
 
+        // TODO: Replace with switch an enum-States
         if (isRunning)
         {
             TimeSpan t = actTime - startTime;
@@ -122,6 +126,7 @@ public class Game : MonoBehaviour {
     {
         bodiesState state = _data.data;
 
+        // TODO: Replace with switch
         if (state == bodiesState.NO_ACTIVE_SOURCE)
         {
             //reset();
@@ -147,8 +152,10 @@ public class Game : MonoBehaviour {
     //Handle different Kinect states every frame
     private void OnKinectStateUpdate(object sender, MyEvArgs<bodiesState> _data)
     {
+        // TODO: Unnecessary switch(_data.data) should do the job
         bodiesState state = _data.data;
 
+        // TODO: Replace with switch
         if (state == bodiesState.NO_ACTIVE_SOURCE)
         {
             //Every frame there is no body found, search for a new detected bodies
@@ -176,6 +183,7 @@ public class Game : MonoBehaviour {
     //GAME CONTROL METHODS
     //---------------------
 
+    
     private void prepare(bool _value)
     {
         isPreparing = _value;

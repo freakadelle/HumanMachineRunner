@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+// TODO: Delete this - avatar exists as prefab!
+// TODO: Needed vars can be re factored into avatar script
 public class Player
 {
 

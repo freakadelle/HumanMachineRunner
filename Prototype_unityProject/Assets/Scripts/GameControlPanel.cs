@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// TODO: Remove this class, is it really necessary? 
 public class GameControlPanel : MonoBehaviour
 {
 

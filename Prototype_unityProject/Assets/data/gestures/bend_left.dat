@@ -38238,8 +38238,8 @@
     }
   ],
   "DelayInMsBetweenDetections": 100,
-  "FrameMax": 37,
-  "FrameMin": 27,
+  "FrameMax": 40,
+  "FrameMin": 35,
   "GestureData": [
     {
       "Joints": [
@@ -48486,8 +48486,8 @@
       0.0
     ],
     [
-      20.0,
-      10.0,
+      5.0,
+      1.0,
       0.0
     ],
     [

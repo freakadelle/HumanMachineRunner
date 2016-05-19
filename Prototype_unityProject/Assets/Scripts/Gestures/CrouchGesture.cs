@@ -2,17 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using Windows.Kinect;
+using Assets.Scripts;
 
 public class CrouchGesture : MyGesture {
 
     public CrouchGesture()
     {
-        MinIntervalCap = 50;
+        MinIntervalCap = 15;
         name = "crouch";
 
         //Add some jointTolerances
         tolerances = new List<JointTolerance>();
-        tolerances.Add(new JointTolerance(JointType.Neck, 0, -0.2, 0));
+        tolerances.Add(new JointTolerance(JointType.Head, 0, -0.15, 0));
     }
 
     public override bool validate(Body _act, Body _ref)
@@ -35,6 +36,7 @@ public class CrouchGesture : MyGesture {
     public override void trigger()
     {
         MinInterval = MinIntervalCap;
+        AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Ducking;
         Debug.Log("Gesture: " + name + " triggered!");
     }
 

@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using Windows.Kinect;
+using Assets.Scripts;
 
 public class JumpGesture : MyGesture {
 
     public JumpGesture()
     {
-        MinIntervalCap = 50;
+        MinIntervalCap = 15;
         name = "jump";
 
         //Add some jointTolerances
@@ -36,6 +37,7 @@ public class JumpGesture : MyGesture {
     public override void trigger()
     {
         MinInterval = MinIntervalCap;
+        AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Jumping;
         Debug.Log("Gesture: " + name + " triggered!");
     }
 

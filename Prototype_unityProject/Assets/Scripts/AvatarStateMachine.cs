@@ -6,7 +6,8 @@
         {
             Idle = 0,
             Jumping = 1,
-            Ducking = 2
+            Ducking = 2,
+            Bending = 3
         }
 
         public enum AvatarLane

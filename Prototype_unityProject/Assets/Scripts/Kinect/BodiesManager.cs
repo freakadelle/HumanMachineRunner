@@ -23,12 +23,14 @@ public class BodiesManager
 
     private int initFrames;
     private int initFramesCap = 25;
-    private double initTolerance = 0.07;
+    private double initTolerance = 0.1;
 
     private int activeIndex;
     private bodiesState state;
 
-    public BodiesManager(List<Body> _src = null)
+    public event EventHandler<MyEvArgs<bodiesState>> StateChanged;
+
+    public void init(List<Body> _src = null)
     {
         activeSource = null;
         activeIndex = -1;
@@ -49,6 +51,7 @@ public class BodiesManager
 
     public void updateStates(List<Body> _src)
     {
+
         //Todo: Referenz lässt sich nicht speichern. Muss jedes mal neu abgelegt werden!
         bodyList = _src;
 
@@ -65,10 +68,10 @@ public class BodiesManager
         }
         else if(State != bodiesState.NO_DATA)
         {
+
+            
             //Get amount of tracked bodies
             int trackedBodies = numberOfBodiesTracked();
-
-            Debug.Log(trackedBodies);
 
             if (trackedBodies > 1 && state != bodiesState.MULTIPLE_SOURCES)
             {
@@ -184,9 +187,14 @@ public class BodiesManager
         return false;
     }
 
-    private void onStateChanged(bodiesState value)
+    //CHANGED LISTENER
+
+    protected virtual void OnStateChanged(bodiesState _value)
     {
-        Debug.Log("BodySourceManager Changed State to: " + value);
+        if (StateChanged != null)
+        {
+            StateChanged(this, new MyEvArgs<bodiesState>(_value));
+        }
     }
 
     //PROPERTIES
@@ -202,7 +210,7 @@ public class BodiesManager
         set
         {
             state = value;
-            onStateChanged(value);
+            OnStateChanged(value);
         }
     }
 }

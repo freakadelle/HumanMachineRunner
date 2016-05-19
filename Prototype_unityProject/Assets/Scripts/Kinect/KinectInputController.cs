@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using Windows.Kinect;
+using Assets.Scripts;
 using KineticSpace.Kinect;
 
 using UnityEngine;
@@ -10,79 +13,109 @@ public class KinectInputController : MonoBehaviour
 {
 
     public Transform playerTransform;
-    public FirstPersonController playerController;
-    public CharacterController playerChar;
+    public AvatarController avatarController;
 
     private DefaultKinectGestureEvaluator _evaluator;
     //private Dictionary<JointType, Windows.Kinect.Joint> source; 
     private BodiesManager _bm;
-    private List<MyGesture> myGestures; 
+    private List<MyGesture> myGestures;
 
-    //private Game game;
 
     void OnApplicationQuit()
     {
         this._evaluator.Stop();
     }
 
-    void Start()
+    void Awake()
     {
+        avatarController.enabled = false;
+
         QualitySettings.vSyncCount = 0;
 
         var dataPath = Path.Combine(Application.dataPath, "data");
 
         _bm = new BodiesManager();
+        _bm.StateChanged += OnBodyStateChange;
 
         //Build some hardcoded Gestures
         myGestures = new List<MyGesture>();
-
         myGestures.Add(new JumpGesture());
         myGestures.Add(new CrouchGesture());
 
         //Add gestures from KineticSpace per file
         this._evaluator = new DefaultKinectGestureEvaluator(dataPath);
-
         this._evaluator.AddGesture("bend_right");
         this._evaluator.AddGesture("bend_left");
-        //this._evaluator.AddGesture("test");
-        //this._evaluator.AddGesture("test_3");
-
         this._evaluator.Start();
+    }
+
+    void Start()
+    {
+        //Game.init();
     }
 
     void Update()
     {
         
         var bodies = _evaluator._kinectSource.LastBodies;
+        //var temp = _evaluator._kinectSource.Sensor.BodyFrameSource.BodyCount;
 
         waitForBodySource();
 
         //Todo: Die Referenz muss immer erneut mitgegeben werden. Weshalb kann er die Referenz beim Konstruktoraufruf nich benutzen.
         _bm.updateStates(bodies);
 
-        //Handle different body states
+        //Handle different body states every frame
         if (_bm.State == bodiesState.NO_ACTIVE_SOURCE)
         {
-            _bm.reset();
             _bm.nextPossibleBody();
         } else if (_bm.State == bodiesState.SINGLE_SOURCE)
         {
-            handleHardCodeGestures();
-            handleKineticSpaceGestures();
+            handleGestureInput();
         }
         else if(_bm.State == bodiesState.MULTIPLE_SOURCES)
         {
-            //_bm.removeActiveBody();
-            //_bm.nextPossibleBody();
             //Todo: Was passiert bei multiple Sources
         } else if (_bm.State == bodiesState.INITIALIZE_SOURCE)
         {
             _bm.initializeBody();
         }
+
+        Game.update();
     }
 
     //Implemented Methods
     //------------------------------------------------------------------------------------------------------
+
+    private void OnBodyStateChange(object sender, MyEvArgs<bodiesState> _data)
+    {
+        Debug.Log("BodySourceManager State changed: " + _data.data);
+
+        //Handle different body states once per change State
+        if (_bm.State == bodiesState.NO_ACTIVE_SOURCE)
+        {
+            avatarController.enabled = false;
+            _bm.reset();
+            if (Game.isRunning)
+            {
+                Game.pause(true);
+            }
+        }
+        else if (_bm.State == bodiesState.SINGLE_SOURCE)
+        {
+            avatarController.enabled = true;
+            Game.start();
+        }
+        else if (_bm.State == bodiesState.MULTIPLE_SOURCES)
+        {
+            avatarController.enabled = false;
+            Game.pause(true);
+        }
+        else if (_bm.State == bodiesState.INITIALIZE_SOURCE)
+        {
+            avatarController.enabled = false;
+        }
+    }
 
     private void waitForBodySource()
     {
@@ -93,9 +126,15 @@ public class KinectInputController : MonoBehaviour
             //Falls Sensordaten vorhanden. Lege einen neuen BodyManager mit den SensorDaten der Bodies an.
             if (_bm.State == bodiesState.NO_DATA)
             {
-                _bm = new BodiesManager(bodies);
+                _bm.init(bodies);
             }
         }
+    }
+
+    private void handleGestureInput()
+    {
+        handleHardCodeGestures();
+        handleKineticSpaceGestures();
     }
 
     private void handleKineticSpaceGestures()

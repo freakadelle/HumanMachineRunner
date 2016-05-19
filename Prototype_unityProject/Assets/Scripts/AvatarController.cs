@@ -33,7 +33,7 @@ namespace Assets.Scripts
 
         public void Update()
         {
-            Debug.Log(AvatarStateMachine.AvatarLaneState);
+            //Debug.Log(AvatarStateMachine.AvatarLaneState);
 
             if (_characterController.isGrounded)
             {

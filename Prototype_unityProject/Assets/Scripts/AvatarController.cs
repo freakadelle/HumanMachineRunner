@@ -9,6 +9,7 @@ namespace Assets.Scripts
         public float AvatarJumpSpeed = 8f;
         public float AvatarWalkSpeed = 6f;
         public float LevelGravity = 20.0f;
+        public float Score { get; set; }
 
         public float[] AvatarLanePositionFloats = new float[3]; 
 
@@ -94,7 +95,7 @@ namespace Assets.Scripts
                     gameObject.transform.localScale = new Vector3(1, 0.5f, 1);  // TODO: fix this in final build!
                     break;
                 case AvatarStateMachine.AvatarMove.Idle:
-                    // TODO: Fix this in final build. Right now this is neccessary for duck.
+                    // TODO: Fix this in final build. Right now this is necessary for duck.
                     gameObject.transform.localScale = Vector3.one;
                     break;
             }

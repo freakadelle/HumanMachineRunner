@@ -43,7 +43,7 @@ namespace Assets.Scripts.Kinect
             if (bodies == null) return; // early out
 
             //Falls Sensordaten vorhanden. Lege einen neuen BodyManager mit den SensorDaten der Bodies an.
-            if (BodiesManager.State == bodiesState.NO_DATA)
+            if (BodiesManager.State == BodiesState.NO_DATA)
                 BodiesManager.Init(bodies);
         }
 

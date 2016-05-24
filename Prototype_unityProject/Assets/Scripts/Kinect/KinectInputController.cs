@@ -25,12 +25,12 @@ namespace Assets.Scripts.Kinect
         public void Update()
         {
             //Look for bodies
-            var bodies = _kinectSource.LastBodies;
+            //var bodies = _kinectSource.LastBodies;
 
             WaitForBodySource();
 
             //Todo: Die Referenz muss immer erneut mitgegeben werden. Weshalb kann er die Referenz beim Konstruktoraufruf nich benutzen.
-            BodiesManager.UpdateStates(bodies);
+            BodiesManager.UpdateStates(/*bodies*/);
 
             //  OnKinectStateUpdate(bodiesManager.State);
             // New event system fire on every update

@@ -31,31 +31,29 @@ namespace Assets.Scripts
 
         public HUD_View View;
 
-        private KinectInputController _kinectController;
+        private static KinectInputController _kinectController;
         public AvatarController AvatarController;
 
-
-
-        #region KinectEventSystem
+#region KinectEventSystem
         /// <summary>
         /// Event System Class
         /// </summary>
         public class KinectEvent : GameEvent
         {
-            public bodiesState BodieState { get; private set; }
+            public BodiesState BodieState { get; private set; }
 
-            public KinectEvent(bodiesState bodieState)
+            public KinectEvent(BodiesState bodieState)
             {
                 BodieState = bodieState;
             }
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             Events.instance.AddListener<KinectEvent>(OnStateChanged);
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             Events.instance.RemoveListener<KinectEvent>(OnStateChanged);
         }
@@ -64,19 +62,10 @@ namespace Assets.Scripts
         {
             // Handle event here
             Debug.Log("BodySourceManager State changed: " + e.BodieState);
-            // TODO: call handle functions
-            
-            //  Events.instance.Raise(e.BodieState);
-
-            /*     protected virtual void OnStateChanged(bodiesState _value)
-            {
-                if (StateChanged != null)
-                {
-                    StateChanged(this, new MyEvArgs<bodiesState>(_value));
-                }
-            }*/
+            OnKinectStateChanged(e.BodieState);
+            OnKinectStateUpdate(e.BodieState);
         }
-        #endregion
+#endregion
 
 
 
@@ -132,12 +121,16 @@ namespace Assets.Scripts
             //Handle Game States
             _actTime = DateTime.Now;
 
+            UpdateGameRelativeToGameState();
+        }
+
+        private void UpdateGameRelativeToGameState()
+        {
             switch (_gameState)
             {
                 case GameState.Running:
                     AvatarController.Score = 13;
                     break;
-
                 case GameState.Preparing:
                     var timeUntilGameisPrepared = SecondsUntilGameStart - (_actTime.Second - _startPrepareTime.Second);
                     if (timeUntilGameisPrepared <= 0)
@@ -159,7 +152,6 @@ namespace Assets.Scripts
 
                 case GameState.Paused:
                     break;
-
                 case GameState.Initialized:
                     break;
                 case GameState.Stopped:
@@ -173,59 +165,51 @@ namespace Assets.Scripts
             }
         }
 
-        //---------------------------
-        //KINECT INPUT EVENT LISTENER
-        //---------------------------
-
-
-        //Handle different Kinect states once per change State
-        private void OnKinectStateChanged(object sender, MyEvArgs<bodiesState> data)
+        private static void OnKinectStateChanged(BodiesState bodiesState)
         {
-            switch (data.data)
+            switch (bodiesState)
             {
-                case bodiesState.NO_ACTIVE_SOURCE:
+                case BodiesState.NO_ACTIVE_SOURCE:
                     if (_gameState == GameState.Running)
                         _gameState = GameState.Paused;
                     break;
-                case bodiesState.SINGLE_SOURCE:
+                case BodiesState.SINGLE_SOURCE:
                     _gameState = GameState.Running;
                     break;
-                case bodiesState.MULTIPLE_SOURCES:
+                case BodiesState.MULTIPLE_SOURCES:
                     _gameState = GameState.Paused;
                     break;
-                case bodiesState.INITIALIZE_SOURCE:
+                case BodiesState.INITIALIZE_SOURCE:
                     _gameState = GameState.Paused;
                     break;
-                case bodiesState.NO_DATA:
+                case BodiesState.NO_DATA:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        //Handle different Kinect states every frame
-        private void OnKinectStateUpdate(object sender, MyEvArgs<bodiesState> data)
+        private static void OnKinectStateUpdate(BodiesState bodiesState)
         {
-            // TODO: Replace with switch
-            switch (data.data)
+            switch (bodiesState)
             {
-                case bodiesState.NO_ACTIVE_SOURCE:
+                case BodiesState.NO_ACTIVE_SOURCE:
                     //Every frame there is no body found, search for a new detected bodies
-                    _kinectController.BodiesManager.nextPossibleBody();
+                    _kinectController.BodiesManager.NextPossibleBody();
                     break;
-                case bodiesState.SINGLE_SOURCE:
+                case BodiesState.SINGLE_SOURCE:
                     //If single source detected, than handle input from that source
                     _kinectController.HandleKineticSpaceGestures();
                     _kinectController.HandleHardCodeGestures();
                     break;
-                case bodiesState.MULTIPLE_SOURCES:
+                case BodiesState.MULTIPLE_SOURCES:
                     //Todo: Was passiert bei multiple Sources
                     break;
-                case bodiesState.INITIALIZE_SOURCE:
+                case BodiesState.INITIALIZE_SOURCE:
                     //If body detected, initialize player norms
-                    _kinectController.BodiesManager.initializeBody();
+                    _kinectController.BodiesManager.InitializeBody();
                     break;
-                case bodiesState.NO_DATA:
+                case BodiesState.NO_DATA:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

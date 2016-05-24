@@ -1,127 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using Windows.Kinect;
-using Assets.Scripts;
+﻿using System.Collections.Generic;
+using System.Linq;
 using KineticSpace.Kinect;
-
 using UnityEngine;
-using UnityStandardAssets.Characters.FirstPerson;
 
-public class KinectInputController : DefaultKinectGestureEvaluator
+namespace Assets.Scripts.Kinect
 {
-
-    public BodiesManager bodiesManager;
-    private List<MyGesture> myGestures;
-
-    //Sate Event Handler
-    public event EventHandler<MyEvArgs<bodiesState>> KinectStateChanged;
-    public event EventHandler<MyEvArgs<bodiesState>> KinectStateUpdate;
-    public event EventHandler<MyEvArgs<string>> GestureDetected;
-
-    public KinectInputController(string baseDataPath) : base(baseDataPath)
+    public class KinectInputController : DefaultKinectGestureEvaluator
     {
-        QualitySettings.vSyncCount = 0;
+        public BodiesManager BodiesManager;
+        private readonly List<MyGesture> _myGestures;
 
-        bodiesManager = new BodiesManager();
-        bodiesManager.StateChanged += OnBodyStateChange;
-
-        myGestures = new List<MyGesture>();
-
-        new DefaultKinectGestureEvaluator(baseDataPath);
-    }
-
-    public void update()
-    {
-        //Look for bodies
-        var bodies = _kinectSource.LastBodies;
-
-        waitForBodySource();
-
-        //Todo: Die Referenz muss immer erneut mitgegeben werden. Weshalb kann er die Referenz beim Konstruktoraufruf nich benutzen.
-        bodiesManager.updateStates(bodies);
-
-        OnKinectStateUpdate(bodiesManager.State);
-    }
-
-    //Implemented Methods
-    //------------------------------------------------------------------------------------------------------
-
-    private void OnBodyStateChange(object sender, MyEvArgs<bodiesState> _data)
-    {
-        Debug.Log("BodySourceManager State changed: " + _data.data);
-        OnKinectStateChanged(_data.data);
-    }
-
-    private void waitForBodySource()
-    {
-        var bodies = _kinectSource.LastBodies;
-
-        if ( bodies != null)
+        public KinectInputController(string baseDataPath) : base(baseDataPath)
         {
+            QualitySettings.vSyncCount = 0;
+
+            BodiesManager = new BodiesManager();
+            //bodiesManager.StateChanged += OnBodyStateChange;
+
+            _myGestures = new List<MyGesture>();
+            // ReSharper disable once ObjectCreationAsStatement
+            new DefaultKinectGestureEvaluator(baseDataPath);
+        }
+
+        public void Update()
+        {
+            //Look for bodies
+            var bodies = _kinectSource.LastBodies;
+
+            WaitForBodySource();
+
+            //Todo: Die Referenz muss immer erneut mitgegeben werden. Weshalb kann er die Referenz beim Konstruktoraufruf nich benutzen.
+            BodiesManager.UpdateStates(bodies);
+
+            //  OnKinectStateUpdate(bodiesManager.State);
+            // New event system fire on every update
+            Events.instance.Raise(new Game.KinectEvent(BodiesManager.State));
+        }
+    
+        private void WaitForBodySource()
+        {
+            var bodies = _kinectSource.LastBodies;
+            if (bodies == null) return; // early out
+
             //Falls Sensordaten vorhanden. Lege einen neuen BodyManager mit den SensorDaten der Bodies an.
-            if (bodiesManager.State == bodiesState.NO_DATA)
-            {
-                bodiesManager.init(bodies);
-            }
-        }
-    }
-
-    public void handleGestureInput()
-    {
-        handleHardCodeGestures();
-        handleKineticSpaceGestures();
-    }
-
-    public void handleKineticSpaceGestures()
-    {
-        //temporarily saves detected gestures
-        var gestures = DetectedGestures;
-
-        if (gestures.Count > 0)
-        {
-            Debug.Log(gestures[0]);
+            if (BodiesManager.State == bodiesState.NO_DATA)
+                BodiesManager.Init(bodies);
         }
 
-        //Clear gestures list
-        SignalDetectedGesturesProcessed();
-    }
 
-    public void handleHardCodeGestures()
-    {
-        //Detect and validate hardcode gestures from Gesturelist
-        for (int i = 0; i < myGestures.Count; i++)
+        public void HandleGestureInput()
         {
-            //Debug.Log(myGestures[i].MinInterval);
-            if (myGestures[i].validate(bodiesManager.ActiveSource, bodiesManager.referenceSource) && myGestures[i].MinInterval <= 0)
-            {
-                myGestures[i].trigger();
-
-                
-            }
+            HandleHardCodeGestures();
+            HandleKineticSpaceGestures();
         }
-    }
 
-    public void addHardCodeGesture(MyGesture _gesture)
-    {
-        myGestures.Add(_gesture);
-    }
-
-    //CHANGED LISTENER
-    protected virtual void OnKinectStateChanged(bodiesState _value)
-    {
-        if (KinectStateChanged != null)
+        public void HandleKineticSpaceGestures()
         {
-            KinectStateChanged(this, new MyEvArgs<bodiesState>(_value));
+            //temporarily saves detected gestures
+            var gestures = DetectedGestures;
+
+            if (gestures != null && gestures.Count > 0)
+                Debug.Log(gestures[0]);
+            
+            //Clear gestures list
+            SignalDetectedGesturesProcessed();
         }
-    }
 
-    protected virtual void OnKinectStateUpdate(bodiesState _value)
-    {
-        if (KinectStateUpdate != null)
+        public void HandleHardCodeGestures()
         {
-            KinectStateUpdate(this, new MyEvArgs<bodiesState>(_value));
+            //Detect and validate hardcode gestures from Gesturelist
+            foreach (var gesture in _myGestures.Where(gesture => gesture.validate(BodiesManager.ActiveSource, BodiesManager.ReferenceSource) && gesture.MinInterval <= 0))
+                gesture.trigger();
+        }
+
+        public void AddHardCodeGesture(MyGesture gesture)
+        {
+            _myGestures.Add(gesture);
         }
     }
 }

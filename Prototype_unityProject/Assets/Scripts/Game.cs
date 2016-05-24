@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Assets.Scripts.Kinect;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -33,6 +34,52 @@ namespace Assets.Scripts
         private KinectInputController _kinectController;
         public AvatarController AvatarController;
 
+
+
+        #region KinectEventSystem
+        /// <summary>
+        /// Event System Class
+        /// </summary>
+        public class KinectEvent : GameEvent
+        {
+            public bodiesState BodieState { get; private set; }
+
+            public KinectEvent(bodiesState bodieState)
+            {
+                BodieState = bodieState;
+            }
+        }
+
+        private void OnEnable()
+        {
+            Events.instance.AddListener<KinectEvent>(OnStateChanged);
+        }
+
+        private void OnDisable()
+        {
+            Events.instance.RemoveListener<KinectEvent>(OnStateChanged);
+        }
+
+        private static void OnStateChanged(KinectEvent e)
+        {
+            // Handle event here
+            Debug.Log("BodySourceManager State changed: " + e.BodieState);
+            // TODO: call handle functions
+            
+            //  Events.instance.Raise(e.BodieState);
+
+            /*     protected virtual void OnStateChanged(bodiesState _value)
+            {
+                if (StateChanged != null)
+                {
+                    StateChanged(this, new MyEvArgs<bodiesState>(_value));
+                }
+            }*/
+        }
+        #endregion
+
+
+
         //--------------------------------
         //MONOBEHAVIOUR IMPLEMENT METHODS
         //--------------------------------
@@ -47,16 +94,16 @@ namespace Assets.Scripts
             _kinectController = new KinectInputController(Path.Combine(Application.dataPath, "data"));
 
             // Coded gestures
-            _kinectController.addHardCodeGesture(new JumpGesture());
-            _kinectController.addHardCodeGesture(new CrouchGesture());
+            _kinectController.AddHardCodeGesture(new JumpGesture());
+            _kinectController.AddHardCodeGesture(new CrouchGesture());
 
             // Gestures from KineticSpace via file
             _kinectController.AddGesture("bend_right");
             _kinectController.AddGesture("bend_left");
 
             //KinectController Events
-            _kinectController.KinectStateChanged += OnKinectStateChanged;
-            _kinectController.KinectStateUpdate += OnKinectStateUpdate;
+          //  _kinectController.KinectStateChanged += OnKinectStateChanged;
+          //  _kinectController.KinectStateUpdate += OnKinectStateUpdate;
 
             _kinectController.Start();
 
@@ -80,7 +127,7 @@ namespace Assets.Scripts
 
         public void Update()
         {
-            _kinectController.update();
+            _kinectController.Update();
 
             //Handle Game States
             _actTime = DateTime.Now;
@@ -164,19 +211,19 @@ namespace Assets.Scripts
             {
                 case bodiesState.NO_ACTIVE_SOURCE:
                     //Every frame there is no body found, search for a new detected bodies
-                    _kinectController.bodiesManager.nextPossibleBody();
+                    _kinectController.BodiesManager.nextPossibleBody();
                     break;
                 case bodiesState.SINGLE_SOURCE:
                     //If single source detected, than handle input from that source
-                    _kinectController.handleKineticSpaceGestures();
-                    _kinectController.handleHardCodeGestures();
+                    _kinectController.HandleKineticSpaceGestures();
+                    _kinectController.HandleHardCodeGestures();
                     break;
                 case bodiesState.MULTIPLE_SOURCES:
                     //Todo: Was passiert bei multiple Sources
                     break;
                 case bodiesState.INITIALIZE_SOURCE:
                     //If body detected, initialize player norms
-                    _kinectController.bodiesManager.initializeBody();
+                    _kinectController.BodiesManager.initializeBody();
                     break;
                 case bodiesState.NO_DATA:
                     break;

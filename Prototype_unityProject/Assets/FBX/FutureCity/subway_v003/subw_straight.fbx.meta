@@ -1,47 +1,32 @@
 fileFormatVersion: 2
-guid: ecf5a232a9c80f54da387f7909cf12ad
-timeCreated: 1463980411
+guid: aad1af5f8e965a649948239850d6ef87
+timeCreated: 1464303048
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: t_LaL_curve_left
-    100004: t_LaL_left
-    100006: t_LaM_curve_left
-    100008: t_LaM_left
-    100010: t_LaR_curve_left
-    100012: t_LaR_left
-    100014: t_tube_left
-    400000: //RootNode
-    400002: t_LaL_curve_left
-    400004: t_LaL_left
-    400006: t_LaM_curve_left
-    400008: t_LaM_left
-    400010: t_LaR_curve_left
-    400012: t_LaR_left
-    400014: t_tube_left
-    2300000: t_LaL_curve_left
-    2300002: t_LaL_left
-    2300004: t_LaM_curve_left
-    2300006: t_LaM_left
-    2300008: t_LaR_curve_left
-    2300010: t_LaR_left
-    2300012: t_tube_left
-    3300000: t_LaL_curve_left
-    3300002: t_LaL_left
-    3300004: t_LaM_curve_left
-    3300006: t_LaM_left
-    3300008: t_LaR_curve_left
-    3300010: t_LaR_left
-    3300012: t_tube_left
-    4300000: t_tube_left
-    4300002: t_LaL_curve_left
-    4300004: t_LaM_curve_left
-    4300006: t_LaR_curve_left
-    4300008: t_LaL_left
-    4300010: t_LaR_left
-    4300012: t_LaM_left
+    100000: subw_S_LaL
+    100002: subw_S_LaM
+    100004: subw_S_LaR
+    100006: subw_S_tube
+    100008: //RootNode
+    400000: subw_S_LaL
+    400002: subw_S_LaM
+    400004: subw_S_LaR
+    400006: subw_S_tube
+    400008: //RootNode
+    2300000: subw_S_LaL
+    2300002: subw_S_LaM
+    2300004: subw_S_LaR
+    2300006: subw_S_tube
+    3300000: subw_S_LaL
+    3300002: subw_S_LaM
+    3300004: subw_S_LaR
+    3300006: subw_S_tube
+    4300000: subw_S_LaL
+    4300002: subw_S_LaR
+    4300004: subw_S_LaM
+    4300006: subw_S_tube
   materials:
     importMaterials: 1
     materialName: 0

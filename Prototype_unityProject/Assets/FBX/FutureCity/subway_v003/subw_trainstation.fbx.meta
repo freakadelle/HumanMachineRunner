@@ -1,42 +1,32 @@
 fileFormatVersion: 2
-guid: a866d17e6a0328c49a3f9d78c24a95c8
-timeCreated: 1463980410
+guid: 9e2a413bbeff46140bfff298d23343f7
+timeCreated: 1464303044
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: bahnhof
-    100002: bahnhof_dach
-    100004: LaL_straight
-    100006: LaM_straight
-    100008: LaR_straight
-    100010: //RootNode
-    100012: trainstation_boardingway
-    400000: bahnhof
-    400002: bahnhof_dach
-    400004: LaL_straight
-    400006: LaM_straight
-    400008: LaR_straight
-    400010: //RootNode
-    400012: trainstation_boardingway
-    2300000: bahnhof
-    2300002: bahnhof_dach
-    2300004: LaL_straight
-    2300006: LaM_straight
-    2300008: LaR_straight
-    2300010: trainstation_boardingway
-    3300000: bahnhof
-    3300002: bahnhof_dach
-    3300004: LaL_straight
-    3300006: LaM_straight
-    3300008: LaR_straight
-    3300010: trainstation_boardingway
-    4300000: LaL_straight
-    4300002: LaR_straight
-    4300004: LaM_straight
-    4300006: trainstation_boardingway
-    4300008: bahnhof
-    4300010: bahnhof_dach
+    100000: subw_S_LaL
+    100002: subw_S_LaM
+    100004: subw_S_LaR
+    100006: subw_S_tube
+    100008: //RootNode
+    400000: subw_S_LaL
+    400002: subw_S_LaM
+    400004: subw_S_LaR
+    400006: subw_S_tube
+    400008: //RootNode
+    2300000: subw_S_LaL
+    2300002: subw_S_LaM
+    2300004: subw_S_LaR
+    2300006: subw_S_tube
+    3300000: subw_S_LaL
+    3300002: subw_S_LaM
+    3300004: subw_S_LaR
+    3300006: subw_S_tube
+    4300000: subw_S_LaL
+    4300002: subw_S_LaR
+    4300004: subw_S_LaM
+    4300006: subw_S_tube
   materials:
     importMaterials: 1
     materialName: 0

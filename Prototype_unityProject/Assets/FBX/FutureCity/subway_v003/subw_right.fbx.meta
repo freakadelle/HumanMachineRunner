@@ -1,49 +1,47 @@
 fileFormatVersion: 2
-guid: 657a71369bbdffc4a896a38684892b4a
-timeCreated: 1463980405
+guid: ae1efb6013ec59e46912af89fb5d67d5
+timeCreated: 1464303053
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: Null_3
-    100004: t_LaL_curve_right
-    100006: t_LaL_right
-    100008: t_LaM_curve_right
-    100010: t_LaM_right
-    100012: t_LaR_curve_right
-    100014: t_LaR_right
-    100016: t_tube_right
-    400000: //RootNode
-    400002: Null_3
-    400004: t_LaL_curve_right
-    400006: t_LaL_right
-    400008: t_LaM_curve_right
-    400010: t_LaM_right
-    400012: t_LaR_curve_right
-    400014: t_LaR_right
-    400016: t_tube_right
-    2300000: t_LaL_curve_right
-    2300002: t_LaL_right
-    2300004: t_LaM_curve_right
-    2300006: t_LaM_right
-    2300008: t_LaR_curve_right
-    2300010: t_LaR_right
-    2300012: t_tube_right
-    3300000: t_LaL_curve_right
-    3300002: t_LaL_right
-    3300004: t_LaM_curve_right
-    3300006: t_LaM_right
-    3300008: t_LaR_curve_right
-    3300010: t_LaR_right
-    3300012: t_tube_right
-    4300000: t_tube_right
-    4300002: t_LaL_curve_right
-    4300004: t_LaM_curve_right
-    4300006: t_LaR_curve_right
-    4300008: t_LaL_right
-    4300010: t_LaR_right
-    4300012: t_LaM_right
+    100000: subw_R_LaL
+    100002: subw_R_LaL_curve
+    100004: subw_R_LaM
+    100006: subw_R_LaM_curve
+    100008: subw_R_LaR
+    100010: subw_R_LaR_curve
+    100012: subw_R_tube
+    100014: //RootNode
+    400000: subw_R_LaL
+    400002: subw_R_LaL_curve
+    400004: subw_R_LaM
+    400006: subw_R_LaM_curve
+    400008: subw_R_LaR
+    400010: subw_R_LaR_curve
+    400012: subw_R_tube
+    400014: //RootNode
+    2300000: subw_R_LaL
+    2300002: subw_R_LaL_curve
+    2300004: subw_R_LaM
+    2300006: subw_R_LaM_curve
+    2300008: subw_R_LaR
+    2300010: subw_R_LaR_curve
+    2300012: subw_R_tube
+    3300000: subw_R_LaL
+    3300002: subw_R_LaL_curve
+    3300004: subw_R_LaM
+    3300006: subw_R_LaM_curve
+    3300008: subw_R_LaR
+    3300010: subw_R_LaR_curve
+    3300012: subw_R_tube
+    4300000: subw_R_tube
+    4300002: subw_R_LaL
+    4300004: subw_R_LaR
+    4300006: subw_R_LaM
+    4300008: subw_R_LaL_curve
+    4300010: subw_R_LaM_curve
+    4300012: subw_R_LaR_curve
   materials:
     importMaterials: 1
     materialName: 0

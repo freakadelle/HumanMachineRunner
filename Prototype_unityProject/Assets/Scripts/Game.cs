@@ -38,6 +38,15 @@ namespace Assets.Scripts
         /// <summary>
         /// Event System Class
         /// </summary>
+        public class KinectUpdateEvent : GameEvent
+        {
+            public BodiesState BodieState { get; private set; }
+            
+            public KinectUpdateEvent(BodiesState bodieState)
+            {
+                BodieState = bodieState;
+            }
+        }
         public class KinectEvent : GameEvent
         {
             public BodiesState BodieState { get; private set; }
@@ -50,21 +59,31 @@ namespace Assets.Scripts
 
         protected virtual void OnEnable()
         {
+            Events.instance.AddListener<KinectUpdateEvent>(OnStateChanged);
             Events.instance.AddListener<KinectEvent>(OnStateChanged);
+
         }
 
         protected virtual void OnDisable()
         {
+            Events.instance.RemoveListener<KinectUpdateEvent>(OnStateChanged);
             Events.instance.RemoveListener<KinectEvent>(OnStateChanged);
+
         }
 
+        private static void OnStateChanged(KinectUpdateEvent e)
+        {
+            // Handle event here
+            Debug.Log("BodySourceManager State changed: " + e.BodieState);
+            OnKinectStateUpdate(e.BodieState);
+        }
         private static void OnStateChanged(KinectEvent e)
         {
             // Handle event here
             Debug.Log("BodySourceManager State changed: " + e.BodieState);
-            OnKinectStateChanged(e.BodieState);
-            OnKinectStateUpdate(e.BodieState);
+             OnKinectStateChanged(e.BodieState);
         }
+
 #endregion
 
 

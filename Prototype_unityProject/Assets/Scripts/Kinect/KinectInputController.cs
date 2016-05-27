@@ -9,12 +9,12 @@ namespace Assets.Scripts.Kinect
     {
         public BodiesManager BodiesManager;
         private readonly List<MyGesture> _myGestures;
-
+        
         public KinectInputController(string baseDataPath) : base(baseDataPath)
         {
             QualitySettings.vSyncCount = 0;
-
-            BodiesManager = new BodiesManager();
+            // TODO: _kinectSource.Sensor.BodyFrameSource
+            BodiesManager = new BodiesManager(_kinectSource.Sensor.BodyFrameSource);
             //bodiesManager.StateChanged += OnBodyStateChange;
 
             _myGestures = new List<MyGesture>();

@@ -73,15 +73,13 @@ namespace Assets.Scripts
         }
         private void _setMoveDirectionWithinLaneSwitch(int arrayIndex)
         {
-
                 if (gameObject.transform.position.x < AvatarLanePositionFloats[arrayIndex])
                     _moveDirection.x = AvatarWalkSpeed * Time.deltaTime;
                 else if (gameObject.transform.position.x > AvatarLanePositionFloats[arrayIndex])
                     _moveDirection.x = -(AvatarWalkSpeed * Time.deltaTime);
                 // probably not needed - but without avatar is sometimes stuck in the middle
                 else if(Math.Abs(gameObject.transform.position.x - AvatarLanePositionFloats[arrayIndex]) < _tolerance)
-                    AvatarStateMachine.AvatarLaneState = AvatarStateMachine.AvatarLane.Idle;
-           
+                    AvatarStateMachine.AvatarLaneState = AvatarStateMachine.AvatarLane.Idle;  
         }
 
         private void _avatarMovement()

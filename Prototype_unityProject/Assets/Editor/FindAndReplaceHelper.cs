@@ -13,9 +13,12 @@ public class FindAndReplaceHelper : EditorWindow
         {
             var rot = obj.transform.rotation;
             var pos = obj.transform.position;
+            var scale = obj.transform.lossyScale;
+
             try
             {
                 var newObj = Instantiate(outcome, pos, rot) as GameObject;
+                newObj.transform.localScale = scale;
                 Undo.RegisterCreatedObjectUndo(newObj, "Create object");
                 newObj.transform.parent = obj.transform.parent;
                 newObj.name = outcome.name;

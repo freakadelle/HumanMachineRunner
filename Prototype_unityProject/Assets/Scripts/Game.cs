@@ -41,49 +41,49 @@ namespace Assets.Scripts
         public class KinectUpdateEvent : GameEvent
         {
             public BodiesState BodieState { get; private set; }
-            
+
             public KinectUpdateEvent(BodiesState bodieState)
             {
                 BodieState = bodieState;
             }
-        }
-        public class KinectEvent : GameEvent
-        {
-            public BodiesState BodieState { get; private set; }
 
-            public KinectEvent(BodiesState bodieState)
+            public class KinectEvent : GameEvent
             {
-                BodieState = bodieState;
+                public BodiesState BodieState { get; private set; }
+
+                public KinectEvent(BodiesState bodieState)
+                {
+                    BodieState = bodieState;
+                }
+            }
+
+            protected virtual void OnEnable()
+            {
+                Events.instance.AddListener<KinectUpdateEvent>(OnStateChanged);
+                Events.instance.AddListener<KinectEvent>(OnStateChanged);
+            }
+
+            protected virtual void OnDisable()
+            {
+                Events.instance.RemoveListener<KinectUpdateEvent>(OnStateChanged);
+                Events.instance.RemoveListener<KinectEvent>(OnStateChanged);
+
+            }
+
+            private static void OnStateChanged(KinectUpdateEvent e)
+            {
+                // Handle event here
+                Debug.Log("BodySourceManager State changed: " + e.BodieState);
+                OnKinectStateUpdate(e.BodieState);
+            }
+
+            private static void OnStateChanged(KinectEvent e)
+            {
+                // Handle event here
+                Debug.Log("BodySourceManager State changed: " + e.BodieState);
+                OnKinectStateChanged(e.BodieState);
             }
         }
-
-        protected virtual void OnEnable()
-        {
-            Events.instance.AddListener<KinectUpdateEvent>(OnStateChanged);
-            Events.instance.AddListener<KinectEvent>(OnStateChanged);
-
-        }
-
-        protected virtual void OnDisable()
-        {
-            Events.instance.RemoveListener<KinectUpdateEvent>(OnStateChanged);
-            Events.instance.RemoveListener<KinectEvent>(OnStateChanged);
-
-        }
-
-        private static void OnStateChanged(KinectUpdateEvent e)
-        {
-            // Handle event here
-            Debug.Log("BodySourceManager State changed: " + e.BodieState);
-            OnKinectStateUpdate(e.BodieState);
-        }
-        private static void OnStateChanged(KinectEvent e)
-        {
-            // Handle event here
-            Debug.Log("BodySourceManager State changed: " + e.BodieState);
-             OnKinectStateChanged(e.BodieState);
-        }
-
 #endregion
 
 

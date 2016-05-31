@@ -52,7 +52,7 @@ namespace Assets.Scripts.Kinect
         
         }
 
-        public BodiesManager(IList<Body> lastBodies)
+        public BodiesManager(BodyFrameSource lastBodies)
         {
             BodyList = lastBodies;
         }

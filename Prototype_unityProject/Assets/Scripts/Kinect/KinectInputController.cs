@@ -14,7 +14,7 @@ namespace Assets.Scripts.Kinect
         {
             QualitySettings.vSyncCount = 0;
             // TODO: _kinectSource.Sensor.BodyFrameSource
-            BodiesManager = new BodiesManager(_kinectSource.Sensor.BodyFrameSource);
+            BodiesManager = new BodiesManager(_kinectSource.LastBodies);
             //bodiesManager.StateChanged += OnBodyStateChange;
 
             _myGestures = new List<MyGesture>();

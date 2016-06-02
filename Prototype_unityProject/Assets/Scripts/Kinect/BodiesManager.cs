@@ -23,8 +23,8 @@ namespace Assets.Scripts.Kinect
         public Body ReferenceSource;
 
         public int InitFrames;
-        private const int _initFramesCap = 25;
-        private const double _initTolerance = 0.1;
+        private const int _initFramesCap = 30;
+        private const double _initTolerance = 0.07;
 
         private int _activeIndex;
         private BodiesState _state;
@@ -51,7 +51,7 @@ namespace Assets.Scripts.Kinect
 
         public BodiesManager()
         {
-        
+            //Init();
         }
 
         public BodiesManager(IList<Body> lastBodies)
@@ -83,6 +83,7 @@ namespace Assets.Scripts.Kinect
         // TODO: TEST VIA CONSTRUCTOR
         public void UpdateStates(List<Body> src)
         {
+
             //Todo: Referenz lässt sich nicht speichern. Muss jedes mal neu abgelegt werden!
             BodyList = src;
 
@@ -104,7 +105,7 @@ namespace Assets.Scripts.Kinect
                 if (trackedBodies != tempNumerOfBodies)
                 {
                     Debug.Log("NUMBER OF BODIES CHANGED: " + trackedBodies + " --> " + tempNumerOfBodies);
-                    Init(src);
+                 //   Init(src);
                 }
 
                 //Get amount of tracked bodies
@@ -113,13 +114,18 @@ namespace Assets.Scripts.Kinect
                 if (trackedBodies > 1 && _state != BodiesState.MULTIPLE_SOURCES)
                 {
                     State = BodiesState.MULTIPLE_SOURCES;
+                    ActiveSource = null;
                 }
                 else if (trackedBodies == 1 && ActiveSource != null && _state != BodiesState.INITIALIZE_SOURCE && !_isSourceInitialized )
                 {
                     State = BodiesState.INITIALIZE_SOURCE;
-                } else if (_isSourceInitialized && _state != BodiesState.SINGLE_SOURCE && State != BodiesState.MULTIPLE_SOURCES)
+                } else if (trackedBodies == 1 && _isSourceInitialized && _state != BodiesState.SINGLE_SOURCE)
                 {
                     State = BodiesState.SINGLE_SOURCE;
+                    if (ActiveSource == null)
+                    {
+                        NextPossibleBody();
+                    }
                 }
                 else if (trackedBodies <= 0 && _state != BodiesState.NO_ACTIVE_SOURCE)
                 {

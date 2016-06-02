@@ -8,7 +8,8 @@ namespace Assets.Scripts
 {
     public class Game : MonoBehaviour
     {
-        [SerializeField, Range(0, 10)] public int SecondsUntilGameStart;
+        [SerializeField, Range(0, 10)]
+        public int SecondsUntilGameStart;
 
         //GameStates
         private enum GameState
@@ -49,7 +50,7 @@ namespace Assets.Scripts
             _kinectController.Start();
 
             AvatarController = FindObjectOfType<AvatarController>();
-            AvatarController.enabled = false;
+            AvatarController.enabled = true;
 
             Debug.Log("-- GAME PRE-INITIALIZE --");
         }
@@ -81,7 +82,6 @@ namespace Assets.Scripts
             {
                 case GameState.Running:
                     UnPause();
-                    AvatarController.enabled = true;
                     AvatarController.Score = 13;
                     break;
                 case GameState.Preparing:
@@ -91,7 +91,7 @@ namespace Assets.Scripts
                     Pause();
                     break;
                 case GameState.Initialized:
-                    Pause();
+                   // Pause();
                     break;
                 case GameState.Stopped:
                     break;
@@ -99,7 +99,7 @@ namespace Assets.Scripts
                     break;
                 case GameState.Won:
                     break;
-                    case GameState.MultipleSources:
+                case GameState.MultipleSources:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

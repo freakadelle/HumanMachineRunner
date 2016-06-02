@@ -29,7 +29,8 @@ namespace Assets.Scripts.Kinect
         private int _activeIndex;
         private BodiesState _state;
         public Body ActiveSource { get; set; }
-        private List<Body> _bodyList; 
+        private List<Body> _bodyList;
+        private int trackedBodies;
 
         public BodiesState State
         {
@@ -98,10 +99,15 @@ namespace Assets.Scripts.Kinect
             }
             else if(State != BodiesState.NO_DATA)
             {
+                int tempNumerOfBodies = NumberOfBodiesTracked();
 
-            
+                if (trackedBodies != tempNumerOfBodies)
+                {
+                    Debug.Log("OnNumberOfBodiesChanged");
+                }
+
                 //Get amount of tracked bodies
-                int trackedBodies = NumberOfBodiesTracked();
+                trackedBodies = tempNumerOfBodies;
 
                 if (trackedBodies > 1 && _state != BodiesState.MULTIPLE_SOURCES)
                 {

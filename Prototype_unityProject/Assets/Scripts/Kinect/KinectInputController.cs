@@ -14,7 +14,7 @@ namespace Assets.Scripts.Kinect
         {
             QualitySettings.vSyncCount = 0;
             // TODO: _kinectSource.Sensor.BodyFrameSource
-            BodiesManager = new BodiesManager(_kinectSource.Sensor.BodyFrameSource);
+            BodiesManager = new BodiesManager(_kinectSource.LastBodies);
             //bodiesManager.StateChanged += OnBodyStateChange;
 
             _myGestures = new List<MyGesture>();
@@ -34,17 +34,17 @@ namespace Assets.Scripts.Kinect
 
             //  OnKinectStateUpdate(bodiesManager.State);
             // New event system fire on every update
-            Events.instance.Raise(new Game.KinectEvent(BodiesManager.State));
+            Events.instance.Raise(new Game.KinectUpdateEvent(BodiesManager.State));
         }
     
         private void WaitForBodySource()
         {
-            var bodies = _kinectSource.LastBodies;
-            if (bodies == null) return; // early out
+           // var bodies = _kinectSource.LastBodies;
+         //   if (bodies == null) return; // early out
 
             //Falls Sensordaten vorhanden. Lege einen neuen BodyManager mit den SensorDaten der Bodies an.
-            if (BodiesManager.State == BodiesState.NO_DATA)
-                BodiesManager.Init(bodies);
+          //  if (BodiesManager.State == BodiesState.NO_DATA)
+          //      BodiesManager.Init(bodies);
         }
 
 

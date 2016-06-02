@@ -47,15 +47,7 @@ namespace Assets.Scripts
                 BodieState = bodieState;
             }
 
-            public class KinectEvent : GameEvent
-            {
-                public BodiesState BodieState { get; private set; }
-
-                public KinectEvent(BodiesState bodieState)
-                {
-                    BodieState = bodieState;
-                }
-            }
+        
 
             protected virtual void OnEnable()
             {
@@ -84,7 +76,18 @@ namespace Assets.Scripts
                 OnKinectStateChanged(e.BodieState);
             }
         }
-#endregion
+
+        public class KinectEvent : GameEvent
+        {
+            public BodiesState BodieState { get; private set; }
+
+            public KinectEvent(BodiesState bodieState)
+            {
+                BodieState = bodieState;
+            }
+        }
+
+        #endregion
 
 
 

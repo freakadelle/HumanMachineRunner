@@ -19,7 +19,8 @@ namespace Assets.Scripts
             Initialized,
             Stopped,
             Lost,
-            Won
+            Won,
+            MultipleSources
         }
 
         private static GameState _gameState;
@@ -110,11 +111,6 @@ namespace Assets.Scripts
             // Gestures from KineticSpace via file
             _kinectController.AddGesture("bend_right");
             _kinectController.AddGesture("bend_left");
-
-            //KinectController Events
-          //  _kinectController.KinectStateChanged += OnKinectStateChanged;
-          //  _kinectController.KinectStateUpdate += OnKinectStateUpdate;
-
             _kinectController.Start();
 
             AvatarController.enabled = false;
@@ -137,12 +133,15 @@ namespace Assets.Scripts
 
         public void Update()
         {
+            // Handle Kinect
             _kinectController.Update();
-
             //Handle Game States
+            UpdateGameRelativeToGameState();
+          
+
             _actTime = DateTime.Now;
 
-            UpdateGameRelativeToGameState();
+           
         }
 
         private void UpdateGameRelativeToGameState()
@@ -198,7 +197,7 @@ namespace Assets.Scripts
                     _gameState = GameState.Running;
                     break;
                 case BodiesState.MULTIPLE_SOURCES:
-                    _gameState = GameState.Paused;
+                    _gameState = GameState.MultipleSources;
                     break;
                 case BodiesState.INITIALIZE_SOURCE:
                     _gameState = GameState.Paused;
@@ -236,79 +235,5 @@ namespace Assets.Scripts
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-
-        //---------------------
-        //GAME CONTROL METHODS
-        //---------------------
-
-        /*
-    private void prepare(bool _value)
-    {
-        isPreparing = _value;
-        startPrepareTime = DateTime.Now;
-    }
-
-    public void pause(bool _value, bool _prepare = true)
-    {
-        AvatarController.enabled = false;
-        prepare(_prepare);
-        isRunning = !_value && !_prepare;
-        //isPaused = _value;
-        Debug.Log("-- GAME PAUSED: " + _value + " --");
-    }
-
-    public void run(bool _prepare = true)
-    {
-        if (isPaused)
-        {
-            pause(false);
-            prepare(_prepare);
-        }
-        else if (!isRunning)
-        {
-            startTime = DateTime.Now;
-            prepare(_prepare);
-            isRunning = !_prepare;
-            AvatarController.enabled = true;
-            Debug.Log("-- GAME STARTED --");
-        }
-        else
-        {
-            Debug.Log("-- GAME UNABLE TO START. NOT YET INITIALIZED --");
-        }
-    }
-   
-        public void stop()
-        {
-            _startTime = new DateTime();
-            _actTime = new DateTime();
-            isRunning = false;
-            isInitialized = false;
-
-            Debug.Log("-- GAME STOPPED --");
-        }
-
-        public void restart()
-        {
-            stop();
-            //TODO: Method implementation
-        }
-
-        public void loose()
-        {
-            stop();
-            Debug.Log("-- GAME LOOSE --");
-            //TODO: Method implementation    
-        }
-
-        public void win()
-        {
-            stop();
-            Debug.Log("-- GAME WON --");
-            //TODO: Method implementation    
-        }
-    }
-     */
     }
 }

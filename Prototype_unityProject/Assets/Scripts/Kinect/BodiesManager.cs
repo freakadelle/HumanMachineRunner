@@ -103,7 +103,8 @@ namespace Assets.Scripts.Kinect
 
                 if (trackedBodies != tempNumerOfBodies)
                 {
-                    Debug.Log("OnNumberOfBodiesChanged");
+                    Debug.Log("NUMBER OF BODIES CHANGED: " + trackedBodies + " --> " + tempNumerOfBodies);
+                    Init(src);
                 }
 
                 //Get amount of tracked bodies
@@ -145,7 +146,7 @@ namespace Assets.Scripts.Kinect
         
 
             InitFrames--;
-            Debug.Log(InitFrames);
+            //Debug.Log(InitFrames);
 
             for (var i = 0; i < ActiveSource.Joints.Count; i++)
             {

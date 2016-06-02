@@ -29,6 +29,7 @@ namespace Assets.Scripts.Kinect
         private int _activeIndex;
         private BodiesState _state;
         public Body ActiveSource { get; set; }
+        private List<Body> _bodyList; 
 
         public BodiesState State
         {
@@ -65,10 +66,12 @@ namespace Assets.Scripts.Kinect
 
             if (BodyList == null || BodyList.Count <= 0)
             {
+               // Debug.Log("NoData");
                 State = BodiesState.NO_DATA;
             }
             else
             {
+               // Debug.Log("No Active Source");
                 State = BodiesState.NO_ACTIVE_SOURCE;
             }
 
@@ -77,11 +80,11 @@ namespace Assets.Scripts.Kinect
         }
 
         // TODO: TEST VIA CONSTRUCTOR
-        public void UpdateStates(/*List<Body> src*/)
+        public void UpdateStates(List<Body> src)
         {
 
             //Todo: Referenz lässt sich nicht speichern. Muss jedes mal neu abgelegt werden!
-            //_bodyList = src;
+            BodyList = src;
 
             //Es lässt sich keine Referenz auf bodyList setzen, deshalb muss jedes mal activeSource neu gesetzt werden.
             if (State == BodiesState.SINGLE_SOURCE || State == BodiesState.INITIALIZE_SOURCE)

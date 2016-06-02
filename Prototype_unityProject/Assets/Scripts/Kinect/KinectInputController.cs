@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using KineticSpace.Kinect;
 using UnityEngine;
@@ -15,7 +16,11 @@ namespace Assets.Scripts.Kinect
             QualitySettings.vSyncCount = 0;
             // TODO: _kinectSource.Sensor.BodyFrameSource
             BodiesManager = new BodiesManager(_kinectSource.LastBodies);
+<<<<<<< HEAD
             //BodiesManager.State = BodiesState.NO_DATA;
+=======
+            //bodiesManager.StateChanged += OnBodyStateChange;
+>>>>>>> _Moritz
 
             _myGestures = new List<MyGesture>();
             // ReSharper disable once ObjectCreationAsStatement
@@ -25,12 +30,12 @@ namespace Assets.Scripts.Kinect
         public void Update()
         {
             //Look for bodies
-            //var bodies = _kinectSource.LastBodies;
+            var bodies = _kinectSource.LastBodies;
 
             WaitForBodySource();
 
             //Todo: Die Referenz muss immer erneut mitgegeben werden. Weshalb kann er die Referenz beim Konstruktoraufruf nich benutzen.
-            BodiesManager.UpdateStates(/*bodies*/);
+            BodiesManager.UpdateStates(bodies);
 
             //  OnKinectStateUpdate(bodiesManager.State);
             // New event system fire on every update

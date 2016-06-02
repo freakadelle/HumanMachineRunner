@@ -34,7 +34,7 @@ namespace Assets.Scripts.Kinect
 
             //  OnKinectStateUpdate(bodiesManager.State);
             // New event system fire on every update
-            Events.instance.Raise(new Game.KinectEvent(BodiesManager.State));
+            Events.instance.Raise(new Game.KinectUpdateEvent(BodiesManager.State));
         }
     
         private void WaitForBodySource()

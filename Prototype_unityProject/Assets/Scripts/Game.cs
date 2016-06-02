@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using Assets.Scripts.Kinect;
 using UnityEngine;
@@ -7,7 +8,6 @@ namespace Assets.Scripts
 {
     public class Game : MonoBehaviour
     {
-        //Serialize Fields
         [SerializeField, Range(0, 10)] public int SecondsUntilGameStart;
 
         //GameStates
@@ -24,18 +24,109 @@ namespace Assets.Scripts
         }
 
         private static GameState _gameState;
-
-        //Timer variables
-        public DateTime StartTime { get; private set; }
-        private DateTime _startPrepareTime = new DateTime();
-        private DateTime _actTime;
+        private static KinectInputController _kinectController;
 
         public HUD_View View;
-
-        private static KinectInputController _kinectController;
         public AvatarController AvatarController;
 
-#region KinectEventSystem
+
+
+        public void OnApplicationQuit()
+        {
+            _kinectController.Stop();
+        }
+
+        public void Awake()
+        {
+            _kinectController = new KinectInputController(Path.Combine(Application.dataPath, "data"));
+
+            // Coded gestures
+            _kinectController.AddHardCodeGesture(new JumpGesture());
+            _kinectController.AddHardCodeGesture(new CrouchGesture());
+
+            // Gestures from KineticSpace via file
+            _kinectController.AddGesture("bend_right");
+            _kinectController.AddGesture("bend_left");
+            _kinectController.Start();
+
+            AvatarController = FindObjectOfType<AvatarController>();
+            AvatarController.enabled = false;
+
+            Debug.Log("-- GAME PRE-INITIALIZE --");
+        }
+
+        public void Start()
+        {
+            View.warningView.enabled = true;
+            View.elapsedTimeView.enabled = false;
+            View.highscoreView.enabled = false;
+
+            View.warningView.text = "Waiting for player!";
+
+            _gameState = GameState.Initialized;
+
+            Debug.Log("-- GAME INITIALIZED --");
+        }
+
+        public void Update()
+        {
+            // Handle kinect
+            _kinectController.Update();
+            //Handle Game States
+            UpdateGameRelativeToGameState();
+        }
+
+        private void UpdateGameRelativeToGameState()
+        {
+            switch (_gameState)
+            {
+                case GameState.Running:
+                    UnPause();
+                    AvatarController.enabled = true;
+                    AvatarController.Score = 13;
+                    break;
+                case GameState.Preparing:
+                    StartCoroutine(StartGameWithCountDown(SecondsUntilGameStart));
+                    break;
+                case GameState.Paused:
+                    Pause();
+                    break;
+                case GameState.Initialized:
+                    Pause();
+                    break;
+                case GameState.Stopped:
+                    break;
+                case GameState.Lost:
+                    break;
+                case GameState.Won:
+                    break;
+                    case GameState.MultipleSources:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+
+        private static void Pause()
+        {
+            Time.timeScale = 0;
+        }
+
+        private static void UnPause()
+        {
+            Time.timeScale = 1;
+        }
+
+        private static IEnumerator StartGameWithCountDown(int countDownTime)
+        {
+            yield return new WaitForSeconds(countDownTime);
+            // Start Game
+            _gameState = GameState.Running;
+        }
+
+        #region KinectEventSystem
+
         /// <summary>
         /// Event System Class
         /// </summary>
@@ -65,7 +156,7 @@ namespace Assets.Scripts
             private static void OnStateChanged(KinectUpdateEvent e)
             {
                 // Handle event here
-               // Debug.Log("BodySourceManager Update changed: " + e.BodieState);
+                // Debug.Log("BodySourceManager Update changed: " + e.BodieState);
                 OnKinectStateUpdate(e.BodieState);
             }
 
@@ -84,104 +175,6 @@ namespace Assets.Scripts
             public KinectEvent(BodiesState bodieState)
             {
                 BodieState = bodieState;
-            }
-        }
-
-        #endregion
-
-
-
-        //--------------------------------
-        //MONOBEHAVIOUR IMPLEMENT METHODS
-        //--------------------------------
-
-        public void OnApplicationQuit()
-        {
-            _kinectController.Stop();
-        }
-
-        public void Awake()
-        {
-            _kinectController = new KinectInputController(Path.Combine(Application.dataPath, "data"));
-
-            // Coded gestures
-            _kinectController.AddHardCodeGesture(new JumpGesture());
-            _kinectController.AddHardCodeGesture(new CrouchGesture());
-
-            // Gestures from KineticSpace via file
-            _kinectController.AddGesture("bend_right");
-            _kinectController.AddGesture("bend_left");
-            _kinectController.Start();
-
-            AvatarController.enabled = false;
-
-            Debug.Log("-- GAME PRE-INITIALIZE --");
-        }
-
-        public void Start()
-        {
-            View.warningView.enabled = true;
-            View.elapsedTimeView.enabled = false;
-            View.highscoreView.enabled = false;
-
-            View.warningView.text = "Waiting for player!";
-
-            _gameState = GameState.Initialized;
-
-            Debug.Log("-- GAME INITIALIZED --");
-        }
-
-        public void Update()
-        {
-            // Handle Kinect
-            _kinectController.Update();
-            //Handle Game States
-            UpdateGameRelativeToGameState();
-          
-
-            _actTime = DateTime.Now;
-
-           
-        }
-
-        private void UpdateGameRelativeToGameState()
-        {
-            switch (_gameState)
-            {
-                case GameState.Running:
-                    AvatarController.Score = 13;
-                    break;
-                case GameState.Preparing:
-                    var timeUntilGameisPrepared = SecondsUntilGameStart - (_actTime.Second - _startPrepareTime.Second);
-                    if (timeUntilGameisPrepared <= 0)
-                    {
-                        View.warningView.enabled = false;
-                        View.elapsedTimeView.enabled = true;
-                        View.highscoreView.enabled = true;
-
-                        // Start Game
-                        _gameState = GameState.Running;
-
-                        StartTime = DateTime.Now.AddSeconds(-1);
-                    }
-                    else
-                    {
-                        View.warningView.text = timeUntilGameisPrepared.ToString();
-                    }
-                    break;
-
-                case GameState.Paused:
-                    break;
-                case GameState.Initialized:
-                    break;
-                case GameState.Stopped:
-                    break;
-                case GameState.Lost:
-                    break;
-                case GameState.Won:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -214,19 +207,19 @@ namespace Assets.Scripts
             switch (bodiesState)
             {
                 case BodiesState.NO_ACTIVE_SOURCE:
-                    //Every frame there is no body found, search for a new detected bodies
+                    // Search for body
                     _kinectController.BodiesManager.NextPossibleBody();
                     break;
                 case BodiesState.SINGLE_SOURCE:
-                    //If single source detected, than handle input from that source
+                    // Handle body
                     _kinectController.HandleKineticSpaceGestures();
                     _kinectController.HandleHardCodeGestures();
                     break;
                 case BodiesState.MULTIPLE_SOURCES:
-                    //Todo: Was passiert bei multiple Sources
+                    //TODO: Implement
                     break;
                 case BodiesState.INITIALIZE_SOURCE:
-                    //If body detected, initialize player norms
+                    // Initialize
                     _kinectController.BodiesManager.InitializeBody();
                     break;
                 case BodiesState.NO_DATA:
@@ -235,5 +228,7 @@ namespace Assets.Scripts
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        #endregion
     }
 }

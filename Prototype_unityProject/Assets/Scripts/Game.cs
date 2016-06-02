@@ -44,13 +44,13 @@ namespace Assets.Scripts
 
             public KinectUpdateEvent(BodiesState bodieState)
             {
+                OnEnable();
                 BodieState = bodieState;
             }
 
-        
-
             protected virtual void OnEnable()
             {
+
                 Events.instance.AddListener<KinectUpdateEvent>(OnStateChanged);
                 Events.instance.AddListener<KinectEvent>(OnStateChanged);
             }
@@ -59,13 +59,12 @@ namespace Assets.Scripts
             {
                 Events.instance.RemoveListener<KinectUpdateEvent>(OnStateChanged);
                 Events.instance.RemoveListener<KinectEvent>(OnStateChanged);
-
             }
 
             private static void OnStateChanged(KinectUpdateEvent e)
             {
                 // Handle event here
-                Debug.Log("BodySourceManager State changed: " + e.BodieState);
+               // Debug.Log("BodySourceManager Update changed: " + e.BodieState);
                 OnKinectStateUpdate(e.BodieState);
             }
 

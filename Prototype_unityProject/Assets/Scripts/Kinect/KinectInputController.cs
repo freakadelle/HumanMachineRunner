@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using KineticSpace.Kinect;
 using UnityEngine;
@@ -25,12 +26,12 @@ namespace Assets.Scripts.Kinect
         public void Update()
         {
             //Look for bodies
-            //var bodies = _kinectSource.LastBodies;
+            var bodies = _kinectSource.LastBodies;
 
             WaitForBodySource();
 
             //Todo: Die Referenz muss immer erneut mitgegeben werden. Weshalb kann er die Referenz beim Konstruktoraufruf nich benutzen.
-            BodiesManager.UpdateStates(/*bodies*/);
+            BodiesManager.UpdateStates(bodies);
 
             //  OnKinectStateUpdate(bodiesManager.State);
             // New event system fire on every update
@@ -39,12 +40,12 @@ namespace Assets.Scripts.Kinect
     
         private void WaitForBodySource()
         {
-           // var bodies = _kinectSource.LastBodies;
-         //   if (bodies == null) return; // early out
+            var bodies = _kinectSource.LastBodies;
+            if (bodies == null) return; // early out
 
             //Falls Sensordaten vorhanden. Lege einen neuen BodyManager mit den SensorDaten der Bodies an.
-          //  if (BodiesManager.State == BodiesState.NO_DATA)
-          //      BodiesManager.Init(bodies);
+            if (BodiesManager.State == BodiesState.NO_DATA)
+                BodiesManager.Init(bodies);
         }
 
 

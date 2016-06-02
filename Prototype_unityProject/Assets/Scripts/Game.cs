@@ -8,7 +8,8 @@ namespace Assets.Scripts
 {
     public class Game : MonoBehaviour
     {
-        [SerializeField, Range(0, 10)] public int SecondsUntilGameStart;
+        [SerializeField, Range(0, 10)]
+        public int SecondsUntilGameStart;
 
         //GameStates
         private enum GameState
@@ -100,7 +101,7 @@ namespace Assets.Scripts
                     break;
                 case GameState.Won:
                     break;
-                    case GameState.MultipleSources:
+                case GameState.MultipleSources:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

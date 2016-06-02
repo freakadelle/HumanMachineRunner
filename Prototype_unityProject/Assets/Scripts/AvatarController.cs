@@ -11,31 +11,19 @@ namespace Assets.Scripts
         public float LevelGravity = 20.0f;
         public float Score { get; set; }
 
-        public float[] AvatarLanePositionFloats = new float[3]; 
-
         private CharacterController _characterController;
         private Vector3 _moveDirection = Vector3.zero;
-
-        private const double _tolerance = 0.00;
 
         public void Start()
         {
             _characterController = GetComponent<CharacterController>();
             // Set inital states
             _setAvatarMoveStateToIdle();
-            AvatarStateMachine.AvatarLaneState = AvatarStateMachine.AvatarLane.Middle;
-
-            // Set inital Lane positions
-            AvatarLanePositionFloats[0] = -3F;
-            AvatarLanePositionFloats[1] = 0F;
-            AvatarLanePositionFloats[2] = 3F;
         }
 
 
         public void Update()
         {
-            //Debug.Log(AvatarStateMachine.AvatarLaneState);
-
             if (_characterController.isGrounded)
             {
                 // Always move in z
@@ -43,7 +31,6 @@ namespace Assets.Scripts
                 _moveDirection = new Vector3(0, 0, moveSpeed);
 
                 _avatarMovement();
-                _avatarLaneState();
 
                 _moveDirection = transform.TransformDirection(_moveDirection);
                 _moveDirection *= AvatarWalkSpeed;
@@ -55,33 +42,7 @@ namespace Assets.Scripts
 
             _characterController.Move(_moveDirection * Time.deltaTime);
         }
-
-        private void _avatarLaneState()
-        {
-            switch (AvatarStateMachine.AvatarLaneState)
-            {
-                case AvatarStateMachine.AvatarLane.Left:
-                    _setMoveDirectionWithinLaneSwitch(0);
-                    break;
-                case AvatarStateMachine.AvatarLane.Middle:
-                    _setMoveDirectionWithinLaneSwitch(1);
-                    break;
-                case AvatarStateMachine.AvatarLane.Right:
-                    _setMoveDirectionWithinLaneSwitch(2);
-                    break;
-            }
-        }
-        private void _setMoveDirectionWithinLaneSwitch(int arrayIndex)
-        {
-                if (gameObject.transform.position.x < AvatarLanePositionFloats[arrayIndex])
-                    _moveDirection.x = AvatarWalkSpeed * Time.deltaTime;
-                else if (gameObject.transform.position.x > AvatarLanePositionFloats[arrayIndex])
-                    _moveDirection.x = -(AvatarWalkSpeed * Time.deltaTime);
-                // probably not needed - but without avatar is sometimes stuck in the middle
-                else if(Math.Abs(gameObject.transform.position.x - AvatarLanePositionFloats[arrayIndex]) < _tolerance)
-                    AvatarStateMachine.AvatarLaneState = AvatarStateMachine.AvatarLane.Idle;  
-        }
-
+        
         private void _avatarMovement()
         {
             switch (AvatarStateMachine.AvatarMoveState)
@@ -96,6 +57,14 @@ namespace Assets.Scripts
                     // TODO: Fix this in final build. Right now this is necessary for duck.
                     gameObject.transform.localScale = Vector3.one;
                     break;
+                case AvatarStateMachine.AvatarMove.Left:
+                    gameObject.transform.Rotate(new Vector3(0,1,0), -45);
+                    break;
+                case AvatarStateMachine.AvatarMove.Right:
+                    gameObject.transform.Rotate(new Vector3(0, 1, 0), 45);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

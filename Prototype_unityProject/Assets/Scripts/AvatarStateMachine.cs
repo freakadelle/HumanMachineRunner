@@ -7,18 +7,10 @@
             Idle = 0,
             Jumping = 1,
             Ducking = 2,
-            Bending = 3
-        }
-
-        public enum AvatarLane
-        {
-            Left,
-            Middle,
-            Right,
-            Idle,
+            Left = 3,
+            Right = 4
         }
 
         public static AvatarMove AvatarMoveState { get; set; }
-        public static AvatarLane AvatarLaneState { get; set; }
     }
 }

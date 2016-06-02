@@ -74,7 +74,6 @@ namespace Assets.Scripts
         private static void OnStateChanged(KinectUpdateEvent e)
         {
             // Handle event here
-            Debug.Log("BodySourceManager State changed: " + e.BodieState);
             OnKinectStateUpdate(e.BodieState);
         }
         private static void OnStateChanged(KinectEvent e)
@@ -210,6 +209,7 @@ namespace Assets.Scripts
 
         private static void OnKinectStateUpdate(BodiesState bodiesState)
         {
+
             switch (bodiesState)
             {
                 case BodiesState.NO_ACTIVE_SOURCE:

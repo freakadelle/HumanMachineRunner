@@ -15,7 +15,7 @@ namespace Assets.Scripts.Kinect
             QualitySettings.vSyncCount = 0;
             // TODO: _kinectSource.Sensor.BodyFrameSource
             BodiesManager = new BodiesManager(_kinectSource.LastBodies);
-            //bodiesManager.StateChanged += OnBodyStateChange;
+            //BodiesManager.State = BodiesState.NO_DATA;
 
             _myGestures = new List<MyGesture>();
             // ReSharper disable once ObjectCreationAsStatement
@@ -44,7 +44,9 @@ namespace Assets.Scripts.Kinect
 
             //Falls Sensordaten vorhanden. Lege einen neuen BodyManager mit den SensorDaten der Bodies an.
             if (BodiesManager.State == BodiesState.NO_DATA)
+            {
                 BodiesManager.Init(bodies);
+            }
         }
 
 

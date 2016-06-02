@@ -49,7 +49,7 @@ namespace Assets.Scripts.Kinect
 
         public BodiesManager()
         {
-        
+            //Init();
         }
 
         public BodiesManager(IList<Body> lastBodies)
@@ -79,6 +79,7 @@ namespace Assets.Scripts.Kinect
         // TODO: TEST VIA CONSTRUCTOR
         public void UpdateStates(/*List<Body> src*/)
         {
+
             //Todo: Referenz lässt sich nicht speichern. Muss jedes mal neu abgelegt werden!
             //_bodyList = src;
 
@@ -96,7 +97,6 @@ namespace Assets.Scripts.Kinect
             else if(State != BodiesState.NO_DATA)
             {
 
-            
                 //Get amount of tracked bodies
                 int trackedBodies = NumberOfBodiesTracked();
 

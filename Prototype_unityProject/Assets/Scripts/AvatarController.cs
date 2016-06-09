@@ -11,12 +11,12 @@ namespace Assets.Scripts
         public float LevelGravity = 20.0f;
         public float Score { get; set; }
 
-        private CharacterController _characterController;
+        public static CharacterController CharacterController { get; private set; }
         private Vector3 _moveDirection = Vector3.zero;
 
         public void Start()
         {
-            _characterController = GetComponent<CharacterController>();
+            CharacterController = GetComponent<CharacterController>();
             // Set inital states
             _setAvatarMoveStateToIdle();
         }
@@ -24,7 +24,7 @@ namespace Assets.Scripts
 
         public void Update()
         {
-            if (_characterController.isGrounded)
+            if (CharacterController.isGrounded)
             {
                 // Always move in z
                 var moveSpeed = AvatarWalkSpeed*Time.deltaTime;
@@ -40,7 +40,7 @@ namespace Assets.Scripts
 
             _moveDirection.y -= LevelGravity * Time.deltaTime;
 
-            _characterController.Move(_moveDirection * Time.deltaTime);
+            CharacterController.Move(_moveDirection * Time.deltaTime);
         }
         
         private void _avatarMovement()

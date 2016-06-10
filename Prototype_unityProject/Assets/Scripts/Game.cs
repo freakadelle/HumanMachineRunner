@@ -30,7 +30,7 @@ namespace Assets.Scripts
         public HUD_View View;
         public AvatarController AvatarController;
 
-        public static IUpdate ComponentWhereUpdateCallShouldBeMade;
+        public static IUpdate ComponentWhereUpdateCallShouldBeExecuted;
 
         public void OnApplicationQuit()
         {
@@ -76,7 +76,7 @@ namespace Assets.Scripts
             //Handle Game States
             UpdateGameRelativeToGameState();
             // Handle Interface
-            ComponentWhereUpdateCallShouldBeMade.ExternalUpdateMethod();
+            ComponentWhereUpdateCallShouldBeExecuted.ExternalUpdateMethod();
         }
 
         private void UpdateGameRelativeToGameState()

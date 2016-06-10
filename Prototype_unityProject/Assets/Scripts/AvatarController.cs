@@ -6,9 +6,10 @@ namespace Assets.Scripts
     public class AvatarController : MonoBehaviour
     {
 
-        public float AvatarJumpSpeed = 8f;
-        public float AvatarWalkSpeed = 6f;
+        public float AvatarJumpSpeed = 2f;
+        public float AvatarWalkSpeed = 10f;
         public float LevelGravity = 20.0f;
+        public float AvatarTurnSpeed = 20.0f;
         public float Score { get; set; }
 
         public static CharacterController CharacterController { get; private set; }
@@ -36,6 +37,7 @@ namespace Assets.Scripts
                 _moveDirection *= AvatarWalkSpeed;
             }
 
+            if(AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Left && AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Right)
             _setAvatarMoveStateToIdle();
 
             _moveDirection.y -= LevelGravity * Time.deltaTime;
@@ -45,6 +47,10 @@ namespace Assets.Scripts
         
         private void _avatarMovement()
         {
+            Quaternion targetRotation;
+            float diff;
+            const float degree = 1;
+
             switch (AvatarStateMachine.AvatarMoveState)
             {
                 case AvatarStateMachine.AvatarMove.Jumping:
@@ -58,10 +64,18 @@ namespace Assets.Scripts
                     gameObject.transform.localScale = Vector3.one;
                     break;
                 case AvatarStateMachine.AvatarMove.Left:
-                    gameObject.transform.Rotate(new Vector3(0,1,0), -45);
+                        targetRotation = Quaternion.Euler(0, 45, 0);
+                        gameObject.transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.fixedDeltaTime * AvatarTurnSpeed);
+                        diff = gameObject.transform.rotation.eulerAngles.y - targetRotation.eulerAngles.y;
+                        if (Mathf.Abs(diff) <= degree)
+                            _setAvatarMoveStateToIdle();
                     break;
                 case AvatarStateMachine.AvatarMove.Right:
-                    gameObject.transform.Rotate(new Vector3(0, 1, 0), 45);
+                        targetRotation = Quaternion.Euler(0, 315, 0) * new Quaternion(0, -1, 0, 0);
+                        gameObject.transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.fixedDeltaTime * AvatarTurnSpeed);
+                        diff = gameObject.transform.rotation.eulerAngles.y - targetRotation.eulerAngles.y;
+                        if (Mathf.Abs(diff) <= degree)
+                            _setAvatarMoveStateToIdle();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -31,6 +31,7 @@ namespace Assets.Scripts
         public AvatarController AvatarController;
 
         public static IUpdate ComponentWhereUpdateCallShouldBeExecuted;
+        private static bool boolHelperSwitch;
 
         public void OnApplicationQuit()
         {
@@ -77,6 +78,25 @@ namespace Assets.Scripts
             UpdateGameRelativeToGameState();
             // Handle Interface
             ComponentWhereUpdateCallShouldBeExecuted.ExternalUpdateMethod();
+         
+         }
+
+
+        /// <summary>
+        /// Returns switched Bool after given timme
+        /// </summary>
+        /// <param name="boolToBeSwitched"></param>
+        /// <param name="timeToWait"></param>
+        public void ReturnBoolSwitchedAfterWaiting(ref bool boolToBeSwitched, float timeToWait)
+        {
+            boolHelperSwitch = boolToBeSwitched;
+            StartCoroutine(SwitchBoolAfterTime(boolToBeSwitched, timeToWait));
+        }
+
+        private IEnumerator SwitchBoolAfterTime(bool boolToBeSwitched, float timeToWait)
+        {
+            yield return new WaitForSeconds(timeToWait);
+            boolHelperSwitch = !boolToBeSwitched;
         }
 
         private void UpdateGameRelativeToGameState()

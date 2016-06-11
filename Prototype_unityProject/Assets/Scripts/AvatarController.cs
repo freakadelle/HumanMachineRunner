@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -11,6 +13,7 @@ namespace Assets.Scripts
         public float LevelGravity = 20.0f;
         public float AvatarTurnSpeed = 20.0f;
         public float Score { get; set; }
+        private float _rotationY;
 
         public static CharacterController CharacterController { get; private set; }
         private Vector3 _moveDirection = Vector3.zero;
@@ -20,11 +23,22 @@ namespace Assets.Scripts
             CharacterController = GetComponent<CharacterController>();
             // Set inital states
             _setAvatarMoveStateToIdle();
+            _rotationY = 0;
+         
         }
 
 
         public void Update()
         {
+
+            if(Input.GetKeyDown(KeyCode.A))
+                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Left;
+
+            if (Input.GetKeyDown(KeyCode.D))
+                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Right;
+
+          //  UnityEngine.Debug.Log(AvatarStateMachine.AvatarMoveState);
+
             if (CharacterController.isGrounded)
             {
                 // Always move in z
@@ -38,19 +52,19 @@ namespace Assets.Scripts
             }
 
             if(AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Left && AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Right)
-            _setAvatarMoveStateToIdle();
+               _setAvatarMoveStateToIdle();
 
             _moveDirection.y -= LevelGravity * Time.deltaTime;
 
             CharacterController.Move(_moveDirection * Time.deltaTime);
         }
+
+        private bool flag = true;
         
         private void _avatarMovement()
         {
-            Quaternion targetRotation;
-            float diff;
-            const float degree = 1;
-
+         
+       
             switch (AvatarStateMachine.AvatarMoveState)
             {
                 case AvatarStateMachine.AvatarMove.Jumping:
@@ -64,27 +78,43 @@ namespace Assets.Scripts
                     gameObject.transform.localScale = Vector3.one;
                     break;
                 case AvatarStateMachine.AvatarMove.Left:
-                        targetRotation = Quaternion.Euler(0, 45, 0);
-                        gameObject.transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.fixedDeltaTime * AvatarTurnSpeed);
-                        diff = gameObject.transform.rotation.eulerAngles.y - targetRotation.eulerAngles.y;
-                        if (Mathf.Abs(diff) <= degree)
-                            _setAvatarMoveStateToIdle();
+                    float angle = 0;
+                    float currentAngle = 0;
+
+                    if (flag)
+                    {
+                        flag = false;
+                        currentAngle = transform.eulerAngles.y;
+                    }
+                    angle = Mathf.LerpAngle(currentAngle, currentAngle + 45, Time.time);
+                    transform.eulerAngles = new Vector3(0, angle, 0);
+                    
+                    
+                    Debug.Log(transform.eulerAngles.y);
+
+                    if ((int) transform.eulerAngles.y == (int) currentAngle + 45)
+                    {
+                        flag = true;
+                        _setAvatarMoveStateToIdle();
+                    }
+                       
+
                     break;
                 case AvatarStateMachine.AvatarMove.Right:
-                        targetRotation = Quaternion.Euler(0, 315, 0) * new Quaternion(0, -1, 0, 0);
-                        gameObject.transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.fixedDeltaTime * AvatarTurnSpeed);
-                        diff = gameObject.transform.rotation.eulerAngles.y - targetRotation.eulerAngles.y;
-                        if (Mathf.Abs(diff) <= degree)
-                            _setAvatarMoveStateToIdle();
-                    break;
+                
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private static void _setAvatarMoveStateToIdle()
+     
+
+
+        private void _setAvatarMoveStateToIdle()
         {
             AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Idle;
+          
+
         }
     }
 }

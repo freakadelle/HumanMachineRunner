@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+
 
 namespace Assets.Scripts
 {
@@ -12,19 +11,23 @@ namespace Assets.Scripts
         public float AvatarWalkSpeed = 10f;
         public float LevelGravity = 20.0f;
         public float AvatarTurnSpeed = 20.0f;
+        public float AvatarRotationSpeed = 2.0f;
+        public float FloatingPointErrorThreshold = 5f;
         public float Score { get; set; }
-        private float _rotationY;
+
 
         public static CharacterController CharacterController { get; private set; }
         private Vector3 _moveDirection = Vector3.zero;
+        private static bool _dirtyFlag = true;
+
 
         public void Start()
         {
             CharacterController = GetComponent<CharacterController>();
             // Set inital states
             _setAvatarMoveStateToIdle();
-            _rotationY = 0;
-         
+
+            AvatarStateMachine.AvatarRotationState = AvatarStateMachine.AvatarRotation.Ninety;
         }
 
 
@@ -46,6 +49,7 @@ namespace Assets.Scripts
                 _moveDirection = new Vector3(0, 0, moveSpeed);
 
                 _avatarMovement();
+                _handleAvatarRotation();
 
                 _moveDirection = transform.TransformDirection(_moveDirection);
                 _moveDirection *= AvatarWalkSpeed;
@@ -59,12 +63,11 @@ namespace Assets.Scripts
             CharacterController.Move(_moveDirection * Time.deltaTime);
         }
 
-        private bool flag = true;
-        
+
+       
         private void _avatarMovement()
         {
          
-       
             switch (AvatarStateMachine.AvatarMoveState)
             {
                 case AvatarStateMachine.AvatarMove.Jumping:
@@ -78,43 +81,95 @@ namespace Assets.Scripts
                     gameObject.transform.localScale = Vector3.one;
                     break;
                 case AvatarStateMachine.AvatarMove.Left:
-                    float angle = 0;
-                    float currentAngle = 0;
-
-                    if (flag)
+                    if (_dirtyFlag)
                     {
-                        flag = false;
-                        currentAngle = transform.eulerAngles.y;
+                        _dirtyFlag = false;
+                        if(AvatarStateMachine.AvatarRotationState != AvatarStateMachine.AvatarRotation.Zero)
+                            AvatarStateMachine.AvatarRotationState--;
+                        else
+                            AvatarStateMachine.AvatarRotationState = AvatarStateMachine.AvatarRotation.ThreeHundredFifteen;
+                            
+                        
                     }
-                    angle = Mathf.LerpAngle(currentAngle, currentAngle + 45, Time.time);
-                    transform.eulerAngles = new Vector3(0, angle, 0);
-                    
-                    
-                    Debug.Log(transform.eulerAngles.y);
-
-                    if ((int) transform.eulerAngles.y == (int) currentAngle + 45)
-                    {
-                        flag = true;
-                        _setAvatarMoveStateToIdle();
-                    }
-                       
-
                     break;
                 case AvatarStateMachine.AvatarMove.Right:
-                
+                    if (_dirtyFlag)
+                    {
+                        _dirtyFlag = false;
+                        if(AvatarStateMachine.AvatarRotationState != AvatarStateMachine.AvatarRotation.ThreeHundredFifteen)
+                            AvatarStateMachine.AvatarRotationState++;
+                        else
+                            AvatarStateMachine.AvatarRotationState = AvatarStateMachine.AvatarRotation.Zero;
+                    }
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-     
 
+        private void _handleAvatarRotation()
+        {
+            switch (AvatarStateMachine.AvatarRotationState)
+            {
+                case AvatarStateMachine.AvatarRotation.Zero:
+                    _rotateToAngle(0);
+                    _checkAndFixFloatingPointErrors(0);
+                    break;
+                case AvatarStateMachine.AvatarRotation.FortyFive:
+                    _rotateToAngle(45);
+                    _checkAndFixFloatingPointErrors(45);
+                    break;
+                case AvatarStateMachine.AvatarRotation.Ninety:
+                    _rotateToAngle(90);
+                    _checkAndFixFloatingPointErrors(90);
+                    break;
+                case AvatarStateMachine.AvatarRotation.OneHundredThirtyFive:
+                    _rotateToAngle(135);
+                    _checkAndFixFloatingPointErrors(135);
+                    break;
+                case AvatarStateMachine.AvatarRotation.OneHundredEighty:
+                    _rotateToAngle(180);
+                    _checkAndFixFloatingPointErrors(180);
+                    break;
+                case AvatarStateMachine.AvatarRotation.TwoHundredTwentyFive:
+                    _rotateToAngle(225);
+                    _checkAndFixFloatingPointErrors(225);
+                    break;
+                case AvatarStateMachine.AvatarRotation.TwoHundredSeventy:
+                    _rotateToAngle(270);
+                    _checkAndFixFloatingPointErrors(270);
+                    break;
+                case AvatarStateMachine.AvatarRotation.ThreeHundredFifteen:
+                    _rotateToAngle(315);
+                    _checkAndFixFloatingPointErrors(315);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+                    
+            }
+        }
 
-        private void _setAvatarMoveStateToIdle()
+        
+
+        private void _rotateToAngle(int angle)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, angle, 0), Time.fixedDeltaTime * AvatarRotationSpeed);
+        }
+
+        private void _checkAndFixFloatingPointErrors(float angle)
+        {
+            Debug.Log(transform.localEulerAngles.y);
+            if (!(Math.Abs(transform.localEulerAngles.y - angle) < FloatingPointErrorThreshold)) return;
+            
+            _setAvatarMoveStateToIdle();
+            transform.localEulerAngles = new Vector3(0, (int) angle, 0);
+            _dirtyFlag = true;
+        }
+
+        private static void _setAvatarMoveStateToIdle()
         {
             AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Idle;
-          
-
         }
     }
 }

@@ -26,12 +26,13 @@ namespace Assets.Scripts
 
         private static GameState _gameState;
         private static KinectInputController _kinectController;
+        private static bool _boolHelperSwitch;
 
         public HUD_View View;
         public AvatarController AvatarController;
 
         public static IUpdate ComponentWhereUpdateCallShouldBeExecuted;
-        private static bool boolHelperSwitch;
+        public static int Highscore;
 
         public void OnApplicationQuit()
         {
@@ -89,14 +90,14 @@ namespace Assets.Scripts
         /// <param name="timeToWait"></param>
         public void ReturnBoolSwitchedAfterWaiting(ref bool boolToBeSwitched, float timeToWait)
         {
-            boolHelperSwitch = boolToBeSwitched;
+            _boolHelperSwitch = boolToBeSwitched;
             StartCoroutine(SwitchBoolAfterTime(boolToBeSwitched, timeToWait));
         }
 
         private IEnumerator SwitchBoolAfterTime(bool boolToBeSwitched, float timeToWait)
         {
             yield return new WaitForSeconds(timeToWait);
-            boolHelperSwitch = !boolToBeSwitched;
+            _boolHelperSwitch = !boolToBeSwitched;
         }
 
         private void UpdateGameRelativeToGameState()
@@ -105,7 +106,6 @@ namespace Assets.Scripts
             {
                 case GameState.Running:
                     UnPause();
-                    AvatarController.Score = 13;
                     break;
                 case GameState.Preparing:
                     StartCoroutine(StartGameWithCountDown(SecondsUntilGameStart));

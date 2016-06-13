@@ -13,10 +13,12 @@ namespace Assets.Scripts
         public float AvatarTurnSpeed = 20.0f;
         public float AvatarRotationSpeed = 2.0f;
         public float FloatingPointErrorThreshold = 5f;
-        public float Score { get; set; }
+        public float Fuel { get; set; }
 
 
         public static CharacterController CharacterController { get; private set; }
+
+        public  AvatarStateMachine.AvatarRotation InitialAvatarRotation;
         private Vector3 _moveDirection = Vector3.zero;
         private static bool _dirtyFlag = true;
 
@@ -26,8 +28,10 @@ namespace Assets.Scripts
             CharacterController = GetComponent<CharacterController>();
             // Set inital states
             _setAvatarMoveStateToIdle();
+            
+            AvatarStateMachine.AvatarRotationState = InitialAvatarRotation;
 
-            AvatarStateMachine.AvatarRotationState = AvatarStateMachine.AvatarRotation.Ninety;
+            Fuel = 1;
         }
 
 

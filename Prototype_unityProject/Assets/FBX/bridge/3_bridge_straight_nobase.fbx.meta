@@ -1,0 +1,134 @@
+fileFormatVersion: 2
+guid: a49d9bc2ee60a2749becf9b81b888801
+timeCreated: 1465486793
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: 3_straight_LaL
+    100004: 3_straight_LaL_ropes
+    100006: 3_straight_LaM
+    100008: 3_straight_LaM_ropes
+    100010: 3_straight_LaR
+    100012: 3_straight_LaR_ropes
+    100014: 3_straight_ropevertical
+    100016: 3_straight_verschlag
+    100018: LaL_collider
+    100020: LaL_collider_2
+    100022: LaM_collider
+    100024: LaM_collider_2
+    100026: LaR_collider
+    100028: LaR_collider_2
+    400000: //RootNode
+    400002: 3_straight_LaL
+    400004: 3_straight_LaL_ropes
+    400006: 3_straight_LaM
+    400008: 3_straight_LaM_ropes
+    400010: 3_straight_LaR
+    400012: 3_straight_LaR_ropes
+    400014: 3_straight_ropevertical
+    400016: 3_straight_verschlag
+    400018: LaL_collider
+    400020: LaL_collider_2
+    400022: LaM_collider
+    400024: LaM_collider_2
+    400026: LaR_collider
+    400028: LaR_collider_2
+    2300000: 3_straight_LaL
+    2300002: 3_straight_LaL_ropes
+    2300004: 3_straight_LaM
+    2300006: 3_straight_LaM_ropes
+    2300008: 3_straight_LaR
+    2300010: 3_straight_LaR_ropes
+    2300012: 3_straight_ropevertical
+    2300014: 3_straight_verschlag
+    2300016: LaL_collider_2
+    2300018: LaM_collider_2
+    2300020: LaR_collider_2
+    3300000: 3_straight_LaL
+    3300002: 3_straight_LaL_ropes
+    3300004: 3_straight_LaM
+    3300006: 3_straight_LaM_ropes
+    3300008: 3_straight_LaR
+    3300010: 3_straight_LaR_ropes
+    3300012: 3_straight_ropevertical
+    3300014: 3_straight_verschlag
+    3300016: LaL_collider_2
+    3300018: LaM_collider_2
+    3300020: LaR_collider_2
+    4300000: LaL_collider_2
+    4300002: LaM_collider_2
+    4300004: LaR_collider_2
+    4300006: 3_straight_verschlag
+    4300008: 3_straight_LaL
+    4300010: 3_straight_LaL_ropes
+    4300012: 3_straight_LaM
+    4300014: 3_straight_LaM_ropes
+    4300016: 3_straight_LaR
+    4300018: 3_straight_LaR_ropes
+    4300020: 3_straight_ropevertical
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

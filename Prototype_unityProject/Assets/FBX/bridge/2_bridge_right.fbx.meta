@@ -1,0 +1,152 @@
+fileFormatVersion: 2
+guid: e8837e01f165bcd49b0ba7b9b4833317
+timeCreated: 1464974424
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: 2_right_base
+    100004: 2_right_LaL
+    100006: 2_right_LaL_c
+    100008: 2_right_LaL_ropes
+    100010: 2_right_LaR
+    100012: 2_right_LaR_c
+    100014: 2_right_LaR_ropes
+    100016: 2_right_ropevertical
+    100018: 2_right_verschlag
+    100020: 2_right_verschlag02
+    100022: 2_right_verschlag_ropes
+    100024: curve_collider
+    100026: gravityring
+    100028: LaL_collider
+    100030: LaL_collider_2
+    100032: LaR_collider
+    100034: LaR_collider_2
+    400000: //RootNode
+    400002: 2_right_base
+    400004: 2_right_LaL
+    400006: 2_right_LaL_c
+    400008: 2_right_LaL_ropes
+    400010: 2_right_LaR
+    400012: 2_right_LaR_c
+    400014: 2_right_LaR_ropes
+    400016: 2_right_ropevertical
+    400018: 2_right_verschlag
+    400020: 2_right_verschlag02
+    400022: 2_right_verschlag_ropes
+    400024: curve_collider
+    400026: gravityring
+    400028: LaL_collider
+    400030: LaL_collider_2
+    400032: LaR_collider
+    400034: LaR_collider_2
+    2300000: 2_right_base
+    2300002: 2_right_LaL
+    2300004: 2_right_LaL_c
+    2300006: 2_right_LaL_ropes
+    2300008: 2_right_LaR
+    2300010: 2_right_LaR_c
+    2300012: 2_right_LaR_ropes
+    2300014: 2_right_ropevertical
+    2300016: 2_right_verschlag
+    2300018: 2_right_verschlag02
+    2300020: 2_right_verschlag_ropes
+    2300022: curve_collider
+    2300024: gravityring
+    2300026: LaL_collider_2
+    2300028: LaR_collider_2
+    3300000: 2_right_base
+    3300002: 2_right_LaL
+    3300004: 2_right_LaL_c
+    3300006: 2_right_LaL_ropes
+    3300008: 2_right_LaR
+    3300010: 2_right_LaR_c
+    3300012: 2_right_LaR_ropes
+    3300014: 2_right_ropevertical
+    3300016: 2_right_verschlag
+    3300018: 2_right_verschlag02
+    3300020: 2_right_verschlag_ropes
+    3300022: curve_collider
+    3300024: gravityring
+    3300026: LaL_collider_2
+    3300028: LaR_collider_2
+    4300000: curve_collider
+    4300002: LaL_collider_2
+    4300004: LaR_collider_2
+    4300006: gravityring
+    4300008: 2_right_LaR_c
+    4300010: 2_right_LaL_c
+    4300012: 2_right_ropevertical
+    4300014: 2_right_verschlag02
+    4300016: 2_right_base
+    4300018: 2_right_LaL
+    4300020: 2_right_LaL_ropes
+    4300022: 2_right_LaR
+    4300024: 2_right_LaR_ropes
+    4300026: 2_right_verschlag
+    4300028: 2_right_verschlag_ropes
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

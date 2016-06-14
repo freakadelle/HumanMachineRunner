@@ -84,7 +84,7 @@ namespace Assets.Scripts
                     break;
                 case AvatarStateMachine.AvatarMove.Idle:
                     // TODO: Fix this in final build. Right now this is necessary for duck.
-                    gameObject.transform.localScale = Vector3.one;
+                    //gameObject.transform.localScale = Vector3.one;
                     break;
                 case AvatarStateMachine.AvatarMove.Left:
                     if (_dirtyFlag)

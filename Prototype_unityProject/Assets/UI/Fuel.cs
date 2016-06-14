@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Assets.Scripts;
 using UnityEngine.UI;
 
 public class Fuel : MonoBehaviour
@@ -33,8 +32,10 @@ public class Fuel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(AvatarController.CollectedFuel.Equals(true))
-            FillFuel();
+        //Todo: if(Avatar.CollectedFuel.Equals(true))
+        FillFuel();
+
+        
     }
 
     private void FillFuel()

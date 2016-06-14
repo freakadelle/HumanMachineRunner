@@ -127,7 +127,7 @@ namespace UnityStandardAssets.ImageEffects
                     else if (lensflareMode.intValue == 1) {
                         // hollywood
                         EditorGUILayout.PropertyField (hollyStretchWidth, new GUIContent(" Stretch width"));
-                        EditorGUILayout.PropertyField (flareRotation,  new GUIContent( " AvatarRotationState"));
+                        EditorGUILayout.PropertyField (flareRotation,  new GUIContent( " Rotation"));
                         hollywoodFlareBlurIterations.intValue = EditorGUILayout.IntSlider (" Blur Iterations", hollywoodFlareBlurIterations.intValue, 1, 4);
 
                         EditorGUILayout.PropertyField (lensFlareSaturation, new GUIContent(" Saturation"));

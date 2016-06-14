@@ -14,6 +14,8 @@ namespace Assets.Scripts
         public float AvatarRotationSpeed = 2.0f;
         public float FloatingPointErrorThreshold = 5f;
         public float Fuel { get; set; }
+        public static bool CollectedFuel { get; set; }
+        //TODO: methode to trigger collectedFuel on collision see Fuel.cs
 
 
         public static CharacterController CharacterController { get; private set; }

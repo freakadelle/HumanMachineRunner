@@ -32,6 +32,8 @@ namespace Assets.Scripts.Kinect
         private List<Body> _bodyList;
         private int trackedBodies;
 
+
+        //TODO: public static State to trigger weight overload UI on hoverboard
         public BodiesState State
         {
             get { return _state; }

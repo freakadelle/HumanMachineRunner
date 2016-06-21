@@ -9,13 +9,13 @@ public class Fuel : MonoBehaviour
     private float _time;
     private bool _isCoroutineStarted = false;
     private int _timeToLooseFuel;
-
+    public static float GetFuel { get; private set; }
     // Use this for initialization
     void Start()
     {
         _scrollbar = GetComponent<Scrollbar>();
-        _scrollbar.size = 1;
-        
+        _scrollbar.size = 1f;
+        GetFuel = _scrollbar.size;
         StartCoroutine(ReduceFuel());
     }
 
@@ -25,38 +25,28 @@ public class Fuel : MonoBehaviour
         if (level.Equals(1))
         {
             _scrollbar = GetComponent<Scrollbar>();
+            GetFuel = _scrollbar.size;
             _scrollbar.size = 1;
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public static void FillFuel()
     {
-        //Todo: if(Avatar.CollectedFuel.Equals(true))
-        FillFuel();
-
-        
+        var scrollbar = GameObject.Find("Fuelbar").GetComponent<Scrollbar>();
+        var scrollbarSize = scrollbar.size + 0.1f;
+        scrollbar.size = scrollbarSize;
     }
-
-    private void FillFuel()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            var scrollbarSize = _scrollbar.size + 0.1f;
-            _scrollbar.size = scrollbarSize;
-        }
-    }
-
 
     IEnumerator ReduceFuel()
     {
         _isCoroutineStarted = true;
         while (_scrollbar.size >= 0)
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(3);
             var scrollbarSize = _scrollbar.size - 0.1f;
             _scrollbar.size = scrollbarSize;
+            GetFuel = _scrollbar.size;
         }
     }
-    
+
 }

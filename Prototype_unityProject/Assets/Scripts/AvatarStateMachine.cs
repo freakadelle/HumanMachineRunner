@@ -4,7 +4,7 @@
     {
         public enum AvatarMove
         {
-            Idle = 0,
+            Running = 0,
             Jumping = 1,
             Ducking = 2,
             Left = 3,

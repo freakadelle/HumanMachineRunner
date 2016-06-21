@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using Assets.Scripts.Kinect;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class WeightOverload : MonoBehaviour
 {
-
     private Image _weightOverload;
     private GameObject _child;
 
@@ -18,12 +19,14 @@ public class WeightOverload : MonoBehaviour
     void Update()
     {
         //ToDo: if(Kinect.Multiplesources && _child.activeSelf.Equals(false))
-        if (Input.GetKeyDown(KeyCode.C) && _child.activeSelf.Equals(false))
+        if (KinectInputController.BodiesManager.State == BodiesState.MULTIPLE_SOURCES && _child.activeSelf.Equals(false))
+        //if (Input.GetKeyDown(KeyCode.C) && _child.activeSelf.Equals(false))
         {
             _child.SetActive(true);
         }
         //ToDo: if(Kinect.Multiplesources && _child.activeSelf.Equals(true))
-        else if (Input.GetKeyDown(KeyCode.C) && _child.activeSelf.Equals(true))
+        //else if (Input.GetKeyDown(KeyCode.C) && _child.activeSelf.Equals(true))
+        else if (KinectInputController.BodiesManager.State == BodiesState.MULTIPLE_SOURCES && _child.activeSelf.Equals(false))
         {
             _child.SetActive(false);
         }

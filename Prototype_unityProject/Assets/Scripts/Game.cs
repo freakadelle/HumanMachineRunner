@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using Assets.Scripts.Kinect;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts
 {
@@ -12,7 +13,7 @@ namespace Assets.Scripts
         public int SecondsUntilGameStart;
 
         //GameStates
-        private enum GameState
+        public enum GameState
         {
             Running,
             Paused,
@@ -24,7 +25,7 @@ namespace Assets.Scripts
             MultipleSources
         }
 
-        private static GameState _gameState;
+        public static GameState _gameState;
         private static KinectInputController _kinectController;
         private static bool _boolHelperSwitch;
 
@@ -119,6 +120,8 @@ namespace Assets.Scripts
                 case GameState.Stopped:
                     break;
                 case GameState.Lost:
+                    Debug.Log("test");
+                    SceneManager.LoadScene(1);
                     break;
                 case GameState.Won:
                     break;
@@ -231,7 +234,7 @@ namespace Assets.Scripts
             {
                 case BodiesState.NO_ACTIVE_SOURCE:
                     // Search for body
-                    _kinectController.BodiesManager.NextPossibleBody();
+                    KinectInputController.BodiesManager.NextPossibleBody();
                     break;
                 case BodiesState.SINGLE_SOURCE:
                     // Handle body
@@ -243,7 +246,7 @@ namespace Assets.Scripts
                     break;
                 case BodiesState.INITIALIZE_SOURCE:
                     // Initialize
-                    _kinectController.BodiesManager.InitializeBody();
+                    KinectInputController.BodiesManager.InitializeBody();
                     break;
                 case BodiesState.NO_DATA:
                     break;

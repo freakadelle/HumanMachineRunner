@@ -8,7 +8,7 @@ namespace Assets.Scripts.Kinect
 {
     public class KinectInputController : DefaultKinectGestureEvaluator
     {
-        public BodiesManager BodiesManager;
+        public static BodiesManager BodiesManager;
         private readonly List<MyGesture> _myGestures;
         
         public KinectInputController(string baseDataPath) : base(baseDataPath)

@@ -16,7 +16,7 @@ namespace Assets.Scripts
         public float DuckNegativeColliderOffset = 2f;
         public float KinectXPositionSensitivy = 0.5f;
         public float GetFuel { get; private set; }
-       
+
         public static CharacterController CharacterController { get; private set; }
 
         public AvatarStateMachine.AvatarRotation InitialAvatarRotation;
@@ -47,7 +47,7 @@ namespace Assets.Scripts
 
         void OnControllerColliderHit(ControllerColliderHit hit)
         {
-           if (hit.collider.gameObject.tag.Equals("barrier"))
+            if (hit.collider.gameObject.tag.Equals("barrier"))
             {
                 Game._gameState = Game.GameState.Lost;
                 SceneManager.LoadScene(1);
@@ -104,7 +104,7 @@ namespace Assets.Scripts
 
             _moveDirection.y -= LevelGravity * Time.deltaTime;
 
-            
+
 
             if (AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Left &&
               AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Right &&

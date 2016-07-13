@@ -1,236 +1,235 @@
 ﻿using System;
-using Assets.Scripts.Kinect;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace Assets.Scripts
+
+/*TODO: Keyboard Controls: A - rotate to left, D - rotate to right, C - duck, SPACE - jump, Left Arrow - strafe to left, Right Arrow - strafe to right
+        --> Add Kinect gestures to if/else of control keys (e.g. if (Input.GetButton("Jump") || Kinect.Gestures = Jump) ) 
+*/
+//TODO: Set StrafeValue to Kinect input
+
+public class AvatarController : MonoBehaviour
 {
-    public class AvatarController : MonoBehaviour
+    //Avatar
+    public float StrafeValue = 10;
+
+    public float GravityMultiplier = 20;
+    public int Speed = 2;
+
+    private Vector2 _input;
+    private CharacterController _controller;
+    private Vector3 _moveDirection = Vector3.zero;
+    private const int StickToGroundForce = 1;
+    private Transform _cameras;
+
+    //Duck
+    private const float DuckNegativeCameraOffset = -0.5f;
+    private Vector3 _camsPos;
+    private float _controllerHeight;
+    private Vector3 _controllerCenter;
+
+    //Rotation
+    private const float RotationSpeed = 2.0f;
+    private const float FloatingPointErrorThreshold = 5f;
+    private static bool _dirtyFlag = true;
+
+    public enum AvatarRotation
     {
-        public float AvatarJumpSpeed = 2f;
-        public float AvatarWalkSpeed = 10f;
-        public float LevelGravity = 20.0f;
-        public float AvatarRotationSpeed = 2.0f;
-        public float FloatingPointErrorThreshold = 5f;
-        public float DuckNegativeCameraOffset = -0.5f;
-        public float DuckNegativeColliderOffset = 2f;
-        public float KinectXPositionSensitivy = 0.5f;
-        public float GetFuel { get; private set; }
+        Zero,
+        FortyFive,
+        Ninety,
+        OneHundredThirtyFive,
+        OneHundredEighty,
+        TwoHundredTwentyFive,
+        TwoHundredSeventy,
+        ThreeHundredFifteen
+    }
 
-        public static CharacterController CharacterController { get; private set; }
+    public static AvatarRotation AvatarRotationState { get; set; }
 
-        public AvatarStateMachine.AvatarRotation InitialAvatarRotation;
-        private Vector3 _moveDirection = Vector3.zero;
-        private static bool _dirtyFlag = true;
-        private static Camera _camera;
-        private static float _originalCameraYPosition;
-        private static float _originalCharacterControllerHeight;
-        private static float _kinectPositionX;
+    void Start()
+    {
+        _controller = GetComponent<CharacterController>();
+        AvatarRotationState = AvatarRotation.Ninety;
+        _cameras = gameObject.transform.FindChild("Cameras");
+        _camsPos = _cameras.localPosition;
+        _controllerCenter = _controller.center;
+        _controllerHeight = _controller.height;
+    }
 
-        public void Start()
+    private void Update()
+    {
+        _input = GetInput();
+
+        Vector3 desiredMove = transform.forward * _input.y + transform.right * _input.x;
+
+        _moveDirection.x = desiredMove.x * Speed;
+        _moveDirection.z = desiredMove.z * Speed;
+
+        
+        if (_controller.isGrounded)
         {
-            CharacterController = GetComponent<CharacterController>();
-            // Set inital states
-            _setAvatarMoveStateToIdle();
+            _moveDirection.y = -StickToGroundForce;
 
-            AvatarStateMachine.AvatarRotationState = InitialAvatarRotation;
-
-            GetFuel = Fuel.GetFuel;
-
-            var cams = GetComponentsInChildren<Camera>();
-            _camera = cams[0];
-            _originalCharacterControllerHeight = CharacterController.height;
-            _originalCameraYPosition = _camera.transform.position.y;
-
-            _kinectPositionX = 0;
-        }
-
-        void OnControllerColliderHit(ControllerColliderHit hit)
-        {
-            if (hit.collider.gameObject.tag.Equals("barrier"))
+            /////////////////////////////// JUMP /////////////////////////////////////
+            if (Input.GetButton("Jump"))
             {
-                Game._gameState = Game.GameState.Lost;
-                SceneManager.LoadScene(1);
+                _moveDirection.y = GravityMultiplier;
+            }
+            /////////////////////////////////////////////////////////////////////////
+
+            ////////////////////////////// DUCK ////////////////////////////////////
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                Duck();
+            }
+            else if (Input.GetKeyUp(KeyCode.C))
+            {
+                StandUp();
+            }
+            /////////////////////////////////////////////////////////////////////////
+        }
+        else
+        {
+            _moveDirection += Physics.gravity * GravityMultiplier * Time.fixedDeltaTime;
+        }
+        
+
+
+        /////////////////////////////// ROTATE //////////////////////////////////
+        HandleAvatarRotation();
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            if (_dirtyFlag)
+            {
+                _dirtyFlag = false;
+                if (AvatarRotationState != AvatarRotation.Zero)
+                    AvatarRotationState--;
+                else
+                    AvatarRotationState = AvatarRotation.ThreeHundredFifteen;
             }
         }
-
-        public void Update()
+        if (Input.GetKeyDown(KeyCode.D))
         {
-
-            GetFuel = Fuel.GetFuel;
-            Debug.Log(GetFuel);
-            if (GetFuel.Equals(0))
+            if (_dirtyFlag)
             {
-                Game._gameState = Game.GameState.Lost;
-                //Debug purpose only
-                SceneManager.LoadScene(1);
-            }
-
-
-            // Debug.Log(AvatarStateMachine.AvatarMoveState);
-            if (AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Ducking)
-                _originalCameraYPosition = _camera.transform.localPosition.y;
-
-            if (Input.GetKeyDown(KeyCode.A) && AvatarStateMachine.AvatarMoveState == AvatarStateMachine.AvatarMove.Running)
-                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Left;
-
-            if (Input.GetKeyDown(KeyCode.D) && AvatarStateMachine.AvatarMoveState == AvatarStateMachine.AvatarMove.Running)
-                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Right;
-
-            if (Input.GetKeyDown(KeyCode.Space) && AvatarStateMachine.AvatarMoveState == AvatarStateMachine.AvatarMove.Running)
-                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Jumping;
-
-            if (Input.GetKey(KeyCode.LeftControl) && AvatarStateMachine.AvatarMoveState == AvatarStateMachine.AvatarMove.Running)
-                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Ducking;
-
-            if (Input.GetKeyUp(KeyCode.LeftControl))
-                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Running;
-
-            if (Input.GetKey(KeyCode.LeftArrow))
-                _kinectPositionX = -KinectXPositionSensitivy;
-
-            if (Input.GetKey(KeyCode.RightArrow))
-                _kinectPositionX = KinectXPositionSensitivy;
-
-            // Always move in z
-            var moveSpeed = AvatarWalkSpeed * Time.deltaTime;
-            _moveDirection = new Vector3(_kinectPositionX, 0, moveSpeed);
-
-            _avatarMovement();
-            _handleAvatarRotation();
-
-            _moveDirection = transform.TransformDirection(_moveDirection);
-            _moveDirection *= AvatarWalkSpeed;
-
-            _moveDirection.y -= LevelGravity * Time.deltaTime;
-
-
-
-            if (AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Left &&
-              AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Right &&
-               CharacterController.isGrounded && AvatarStateMachine.AvatarMoveState != AvatarStateMachine.AvatarMove.Ducking)
-                _setAvatarMoveStateToIdle();
-
-            _kinectPositionX = 0;
-        }
-
-        void FixedUpdate()
-        {
-            CharacterController.Move(_moveDirection * Time.deltaTime);
-        }
-
-        private void _avatarMovement()
-        {
-            //Debug.Log(_originalCameraYPosition);
-            switch (AvatarStateMachine.AvatarMoveState)
-            {
-                case AvatarStateMachine.AvatarMove.Jumping:
-                    if (CharacterController.isGrounded)
-                        _moveDirection.y = AvatarJumpSpeed;
-                    break;
-                case AvatarStateMachine.AvatarMove.Ducking:
-                    // TODO: Get Collider and scale it down
-                    _camera.transform.localPosition = new Vector3(_camera.transform.localPosition.x, DuckNegativeCameraOffset, _camera.transform.localPosition.z);
-                    CharacterController.height = 1.5f;
-                    CharacterController.center = new Vector3(0, -0.5f, 0);
-                    break;
-                case AvatarStateMachine.AvatarMove.Running:
-                    _camera.transform.localPosition = new Vector3(_camera.transform.localPosition.x, _originalCameraYPosition, _camera.transform.localPosition.z);
-                    CharacterController.height = _originalCharacterControllerHeight;
-                    CharacterController.center = new Vector3(0, 0, 0);
-                    break;
-                case AvatarStateMachine.AvatarMove.Left:
-                    if (_dirtyFlag)
-                    {
-                        _dirtyFlag = false;
-                        if (AvatarStateMachine.AvatarRotationState != AvatarStateMachine.AvatarRotation.Zero)
-                            AvatarStateMachine.AvatarRotationState--;
-                        else
-                            AvatarStateMachine.AvatarRotationState =
-                                AvatarStateMachine.AvatarRotation.ThreeHundredFifteen;
-                    }
-                    break;
-                case AvatarStateMachine.AvatarMove.Right:
-                    if (_dirtyFlag)
-                    {
-                        _dirtyFlag = false;
-                        if (AvatarStateMachine.AvatarRotationState !=
-                            AvatarStateMachine.AvatarRotation.ThreeHundredFifteen)
-                            AvatarStateMachine.AvatarRotationState++;
-                        else
-                            AvatarStateMachine.AvatarRotationState = AvatarStateMachine.AvatarRotation.Zero;
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                _dirtyFlag = false;
+                if (AvatarRotationState !=
+                    AvatarRotation.ThreeHundredFifteen)
+                    AvatarRotationState++;
+                else
+                    AvatarRotationState = AvatarRotation.Zero;
             }
         }
+        ///////////////////////////////////////////////////////////////////////////
 
+        _controller.Move(_moveDirection * Time.fixedDeltaTime);
+    }
 
-        private void _handleAvatarRotation()
+    private Vector2 GetInput()
+    {
+        ///////////////////////////////////// STRAFE ///////////////////////////////
+        float horizontal;
+
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
-            if (!CharacterController.isGrounded || AvatarStateMachine.AvatarMoveState == AvatarStateMachine.AvatarMove.Jumping || AvatarStateMachine.AvatarMoveState == AvatarStateMachine.AvatarMove.Ducking)
-                return;
-
-            switch (AvatarStateMachine.AvatarRotationState)
-            {
-                case AvatarStateMachine.AvatarRotation.Zero:
-                    _rotateToAngle(0);
-                    _checkAndFixFloatingPointErrors(0);
-                    break;
-                case AvatarStateMachine.AvatarRotation.FortyFive:
-                    _rotateToAngle(45);
-                    _checkAndFixFloatingPointErrors(45);
-                    break;
-                case AvatarStateMachine.AvatarRotation.Ninety:
-                    _rotateToAngle(90);
-                    _checkAndFixFloatingPointErrors(90);
-                    break;
-                case AvatarStateMachine.AvatarRotation.OneHundredThirtyFive:
-                    _rotateToAngle(135);
-                    _checkAndFixFloatingPointErrors(135);
-                    break;
-                case AvatarStateMachine.AvatarRotation.OneHundredEighty:
-                    _rotateToAngle(180);
-                    _checkAndFixFloatingPointErrors(180);
-                    break;
-                case AvatarStateMachine.AvatarRotation.TwoHundredTwentyFive:
-                    _rotateToAngle(225);
-                    _checkAndFixFloatingPointErrors(225);
-                    break;
-                case AvatarStateMachine.AvatarRotation.TwoHundredSeventy:
-                    _rotateToAngle(270);
-                    _checkAndFixFloatingPointErrors(270);
-                    break;
-                case AvatarStateMachine.AvatarRotation.ThreeHundredFifteen:
-                    _rotateToAngle(315);
-                    _checkAndFixFloatingPointErrors(315);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            horizontal = -StrafeValue;
         }
-
-
-        private void _rotateToAngle(int angle)
+        else if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, angle, 0),
-                Time.fixedDeltaTime * AvatarRotationSpeed);
+            horizontal = StrafeValue;
         }
-
-        private void _checkAndFixFloatingPointErrors(float angle)
+        else
         {
-            if (!(Math.Abs(transform.localEulerAngles.y - angle) < FloatingPointErrorThreshold)) return;
-
-            _setAvatarMoveStateToIdle();
-            transform.localEulerAngles = new Vector3(0, (int)angle, 0);
-            _dirtyFlag = true;
+            horizontal = 0;
         }
+        ///////////////////////////////////////////////////////////////////////////
 
-        private static void _setAvatarMoveStateToIdle()
+
+        /////////////////////////////// DRIVE /////////////////////////////////////
+        float vertical = Speed;
+        ///////////////////////////////////////////////////////////////////////////
+
+
+        var input = new Vector2(horizontal, vertical);
+
+        // normalize input if it exceeds 1 in combined length:
+        if (input.sqrMagnitude > 1)
         {
-            if (CharacterController.isGrounded)
-                AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Running;
+            input.Normalize();
+        }
+        return input;
+    }
+
+    private void Duck()
+    {
+        _cameras.localPosition = new Vector3(_cameras.localPosition.x, DuckNegativeCameraOffset, _cameras.localPosition.z);
+        _controller.height = 1.5f;
+        _controller.center = new Vector3(0, -0.5f, 0);
+    }
+
+    private void StandUp()
+    {
+        _cameras.localPosition = _camsPos;
+        _controller.height = _controllerHeight;
+        _controller.center = _controllerCenter;
+    }
+
+    private void HandleAvatarRotation()
+    {
+        if (!_controller.isGrounded)
+            return;
+
+        switch (AvatarRotationState)
+        {
+            case AvatarRotation.Zero:
+                RotateToAngle(0);
+                _checkAndFixFloatingPointErrors(0);
+                break;
+            case AvatarRotation.FortyFive:
+                RotateToAngle(45);
+                _checkAndFixFloatingPointErrors(45);
+                break;
+            case AvatarRotation.Ninety:
+                RotateToAngle(90);
+                _checkAndFixFloatingPointErrors(90);
+                break;
+            case AvatarRotation.OneHundredThirtyFive:
+                RotateToAngle(135);
+                _checkAndFixFloatingPointErrors(135);
+                break;
+            case AvatarRotation.OneHundredEighty:
+                RotateToAngle(180);
+                _checkAndFixFloatingPointErrors(180);
+                break;
+            case AvatarRotation.TwoHundredTwentyFive:
+                RotateToAngle(225);
+                _checkAndFixFloatingPointErrors(225);
+                break;
+            case AvatarRotation.TwoHundredSeventy:
+                RotateToAngle(270);
+                _checkAndFixFloatingPointErrors(270);
+                break;
+            case AvatarRotation.ThreeHundredFifteen:
+                RotateToAngle(315);
+                _checkAndFixFloatingPointErrors(315);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
+
+    private void RotateToAngle(int angle)
+    {
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, angle, 0),
+            Time.fixedDeltaTime * RotationSpeed);
+    }
+
+    private void _checkAndFixFloatingPointErrors(float angle)
+    {
+        if (!(Math.Abs(transform.localEulerAngles.y - angle) < FloatingPointErrorThreshold)) return;
+        transform.localEulerAngles = new Vector3(0, (int)angle, 0);
+        _dirtyFlag = true;
+    }
+
 }
+

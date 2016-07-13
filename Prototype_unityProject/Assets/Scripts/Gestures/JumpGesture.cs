@@ -37,7 +37,7 @@ public class JumpGesture : MyGesture {
     public override void trigger()
     {
         MinInterval = MinIntervalCap;
-        AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Jumping;
+        //AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Jumping;
         Debug.Log("Gesture: " + name + " triggered!");
     }
 

@@ -36,7 +36,7 @@ public class CrouchGesture : MyGesture {
     public override void trigger()
     {
         MinInterval = MinIntervalCap;
-        AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Ducking;
+        //AvatarStateMachine.AvatarMoveState = AvatarStateMachine.AvatarMove.Ducking;
         //Debug.Log("Gesture: " + name + " triggered!");
     }
 

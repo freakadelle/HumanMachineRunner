@@ -1,5 +1,7 @@
 ﻿using System;
+using Assets.Scripts;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 /*TODO: Keyboard Controls: A - rotate to left, D - rotate to right, C - duck, SPACE - jump, Left Arrow - strafe to left, Right Arrow - strafe to right
@@ -12,14 +14,15 @@ public class AvatarController : MonoBehaviour
     //Avatar
     public float StrafeValue = 10;
 
-    public float GravityMultiplier = 20;
-    public int Speed = 2;
+    public float GravityMultiplier = 25;
+    public int Speed = 7;
 
     private Vector2 _input;
     private CharacterController _controller;
     private Vector3 _moveDirection = Vector3.zero;
     private const int StickToGroundForce = 1;
     private Transform _cameras;
+    private bool _jumping;
 
     //Duck
     private const float DuckNegativeCameraOffset = -0.5f;
@@ -28,9 +31,12 @@ public class AvatarController : MonoBehaviour
     private Vector3 _controllerCenter;
 
     //Rotation
-    private const float RotationSpeed = 2.0f;
-    private const float FloatingPointErrorThreshold = 5f;
+    public float RotationSpeed = 3f;
+    private const float FloatingPointErrorThreshold = 7f;
     private static bool _dirtyFlag = true;
+
+    //Fuel
+    public float GetFuel { get; private set; }
 
     public enum AvatarRotation
     {
@@ -58,6 +64,14 @@ public class AvatarController : MonoBehaviour
 
     private void Update()
     {
+        ////////////////////////////// FUEL //////////////////////////////////////////
+        GetFuel = Fuel.GetFuel;
+        if (GetFuel <= 0)
+        {
+            Game._gameState = Game.GameState.Lost;
+        }
+        /////////////////////////////////////////////////////////////////////////////
+
         _input = GetInput();
 
         Vector3 desiredMove = transform.forward * _input.y + transform.right * _input.x;
@@ -65,15 +79,19 @@ public class AvatarController : MonoBehaviour
         _moveDirection.x = desiredMove.x * Speed;
         _moveDirection.z = desiredMove.z * Speed;
 
-        
+
         if (_controller.isGrounded)
         {
             _moveDirection.y = -StickToGroundForce;
 
             /////////////////////////////// JUMP /////////////////////////////////////
-            if (Input.GetButton("Jump"))
+            if (Input.GetButtonDown("Jump"))
             {
                 _moveDirection.y = GravityMultiplier;
+            }
+            else
+            {
+                _jumping = false;
             }
             /////////////////////////////////////////////////////////////////////////
 
@@ -90,39 +108,50 @@ public class AvatarController : MonoBehaviour
         }
         else
         {
-            _moveDirection += Physics.gravity * GravityMultiplier * Time.fixedDeltaTime;
+            _moveDirection += new Vector3(0, -5f, 0) * GravityMultiplier * Time.fixedDeltaTime;
         }
-        
+
 
 
         /////////////////////////////// ROTATE //////////////////////////////////
         HandleAvatarRotation();
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) && _dirtyFlag)
         {
-            if (_dirtyFlag)
-            {
-                _dirtyFlag = false;
-                if (AvatarRotationState != AvatarRotation.Zero)
-                    AvatarRotationState--;
-                else
-                    AvatarRotationState = AvatarRotation.ThreeHundredFifteen;
-            }
+            Debug.Log("A");
+            //   if (_dirtyFlag)
+            //  {
+            _dirtyFlag = false;
+            if (AvatarRotationState != AvatarRotation.Zero)
+                AvatarRotationState--;
+            else
+                AvatarRotationState = AvatarRotation.ThreeHundredFifteen;
+            //  }
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D) && _dirtyFlag)
         {
-            if (_dirtyFlag)
-            {
-                _dirtyFlag = false;
-                if (AvatarRotationState !=
-                    AvatarRotation.ThreeHundredFifteen)
-                    AvatarRotationState++;
-                else
-                    AvatarRotationState = AvatarRotation.Zero;
-            }
+            Debug.Log("D");
+            //  if (_dirtyFlag)
+            //   {
+            _dirtyFlag = false;
+            if (AvatarRotationState !=
+                AvatarRotation.ThreeHundredFifteen)
+                AvatarRotationState++;
+            else
+                AvatarRotationState = AvatarRotation.Zero;
+            //   }
         }
         ///////////////////////////////////////////////////////////////////////////
 
         _controller.Move(_moveDirection * Time.fixedDeltaTime);
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.gameObject.tag.Equals("barrier"))
+        {
+            Game._gameState = Game.GameState.Lost;
+            //SceneManager.LoadScene(1);
+        }
     }
 
     private Vector2 GetInput()
@@ -226,8 +255,10 @@ public class AvatarController : MonoBehaviour
 
     private void _checkAndFixFloatingPointErrors(float angle)
     {
+
         if (!(Math.Abs(transform.localEulerAngles.y - angle) < FloatingPointErrorThreshold)) return;
         transform.localEulerAngles = new Vector3(0, (int)angle, 0);
+
         _dirtyFlag = true;
     }
 

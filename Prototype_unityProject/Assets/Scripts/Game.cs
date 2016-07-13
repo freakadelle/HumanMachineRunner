@@ -28,12 +28,14 @@ namespace Assets.Scripts
         public static GameState _gameState;
         private static KinectInputController _kinectController;
         private static bool _boolHelperSwitch;
+        private bool _kinectConnected = false;
 
         public HUD_View View;
         public AvatarController AvatarController;
 
         public static IUpdate ComponentWhereUpdateCallShouldBeExecuted;
         public static int Highscore;
+
 
         public void OnApplicationQuit()
         {
@@ -51,22 +53,23 @@ namespace Assets.Scripts
             // Gestures from KineticSpace via file
             _kinectController.AddGesture("bend_right");
             _kinectController.AddGesture("bend_left");
-            _kinectController.Start();
 
-            AvatarController = FindObjectOfType<AvatarController>();
-            AvatarController.enabled = true;
+            try
+            {
+                _kinectController.Start();
+                _kinectConnected = true;
+            }
+            catch (DllNotFoundException)
+            {
+                Debug.LogError("Kinect disconnected!");
+            }
+                
 
             Debug.Log("-- GAME PRE-INITIALIZE --");
         }
 
         public void Start()
         {
-            View.warningView.enabled = true;
-            View.elapsedTimeView.enabled = false;
-            View.highscoreView.enabled = false;
-
-            View.warningView.text = "Waiting for player!";
-
             _gameState = GameState.Initialized;
 
             Debug.Log("-- GAME INITIALIZED --");
@@ -78,10 +81,13 @@ namespace Assets.Scripts
             _kinectController.Update();
             //Handle Game States
             UpdateGameRelativeToGameState();
-            // Handle Interface
-            ComponentWhereUpdateCallShouldBeExecuted.ExternalUpdateMethod();
-         
-         }
+
+            if (_kinectConnected)
+            {
+                // Handle Interface
+                ComponentWhereUpdateCallShouldBeExecuted.ExternalUpdateMethod();
+            }
+        }
 
 
         /// <summary>
@@ -120,7 +126,6 @@ namespace Assets.Scripts
                 case GameState.Stopped:
                     break;
                 case GameState.Lost:
-                    Debug.Log("test");
                     SceneManager.LoadScene(1);
                     break;
                 case GameState.Won:

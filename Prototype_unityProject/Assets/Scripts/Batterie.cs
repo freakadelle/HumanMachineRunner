@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Assets.Scripts;
 
 public class Batterie : MonoBehaviour
 {
@@ -22,11 +20,8 @@ public class Batterie : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
-
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit) && col.transform.gameObject.Equals(_avatar))
+        if (col.transform.gameObject.Equals(_avatar))
         {
-
             Fuel.FillFuel();
         }
     }

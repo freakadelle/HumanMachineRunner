@@ -1,8 +1,6 @@
 ﻿using System;
 using Assets.Scripts;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
 
 /*TODO: Keyboard Controls: A - rotate to left, D - rotate to right, C - duck, SPACE - jump, Left Arrow - strafe to left, Right Arrow - strafe to right
         --> Add Kinect gestures to if/else of control keys (e.g. if (Input.GetButton("Jump") || Kinect.Gestures = Jump) ) 
@@ -14,15 +12,14 @@ public class AvatarController : MonoBehaviour
     //Avatar
     public float StrafeValue = 10;
 
-    public float GravityMultiplier = 25;
-    public int Speed = 7;
+    public float GravityMultiplier = 30;
+    public int Speed = 150;
 
     private Vector2 _input;
     private CharacterController _controller;
     private Vector3 _moveDirection = Vector3.zero;
     private const int StickToGroundForce = 1;
     private Transform _cameras;
-    private bool _jumping;
 
     //Duck
     private const float DuckNegativeCameraOffset = -0.5f;
@@ -62,7 +59,7 @@ public class AvatarController : MonoBehaviour
         _controllerHeight = _controller.height;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         ////////////////////////////// FUEL //////////////////////////////////////////
         GetFuel = Fuel.GetFuel;
@@ -76,9 +73,8 @@ public class AvatarController : MonoBehaviour
 
         Vector3 desiredMove = transform.forward * _input.y + transform.right * _input.x;
 
-        _moveDirection.x = desiredMove.x * Speed;
-        _moveDirection.z = desiredMove.z * Speed;
-
+        _moveDirection.x = desiredMove.x * Speed * Time.fixedDeltaTime;
+        _moveDirection.z = desiredMove.z * Speed * Time.fixedDeltaTime;
 
         if (_controller.isGrounded)
         {
@@ -89,10 +85,7 @@ public class AvatarController : MonoBehaviour
             {
                 _moveDirection.y = GravityMultiplier;
             }
-            else
-            {
-                _jumping = false;
-            }
+            
             /////////////////////////////////////////////////////////////////////////
 
             ////////////////////////////// DUCK ////////////////////////////////////
@@ -108,37 +101,27 @@ public class AvatarController : MonoBehaviour
         }
         else
         {
-            _moveDirection += new Vector3(0, -5f, 0) * GravityMultiplier * Time.fixedDeltaTime;
+            _moveDirection += new Vector3(0, -3f, 0) * GravityMultiplier * Time.fixedDeltaTime;
         }
-
-
 
         /////////////////////////////// ROTATE //////////////////////////////////
         HandleAvatarRotation();
         if (Input.GetKeyDown(KeyCode.A) && _dirtyFlag)
         {
-            Debug.Log("A");
-            //   if (_dirtyFlag)
-            //  {
             _dirtyFlag = false;
             if (AvatarRotationState != AvatarRotation.Zero)
                 AvatarRotationState--;
             else
                 AvatarRotationState = AvatarRotation.ThreeHundredFifteen;
-            //  }
         }
         if (Input.GetKeyDown(KeyCode.D) && _dirtyFlag)
         {
-            Debug.Log("D");
-            //  if (_dirtyFlag)
-            //   {
             _dirtyFlag = false;
             if (AvatarRotationState !=
                 AvatarRotation.ThreeHundredFifteen)
                 AvatarRotationState++;
             else
                 AvatarRotationState = AvatarRotation.Zero;
-            //   }
         }
         ///////////////////////////////////////////////////////////////////////////
 
@@ -175,7 +158,7 @@ public class AvatarController : MonoBehaviour
 
 
         /////////////////////////////// DRIVE /////////////////////////////////////
-        float vertical = Speed;
+        float vertical = Speed * Time.fixedDeltaTime;
         ///////////////////////////////////////////////////////////////////////////
 
 

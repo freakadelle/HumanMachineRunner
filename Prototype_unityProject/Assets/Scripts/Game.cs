@@ -30,11 +30,10 @@ namespace Assets.Scripts
         private static bool _boolHelperSwitch;
         private bool _kinectConnected = false;
 
-        public HUD_View View;
         public AvatarController AvatarController;
 
         public static IUpdate ComponentWhereUpdateCallShouldBeExecuted;
-        public static int Highscore;
+        public static string GetHighScore { get; set; }
 
 
         public void OnApplicationQuit()
@@ -63,7 +62,7 @@ namespace Assets.Scripts
             {
                 Debug.LogError("Kinect disconnected!");
             }
-                
+
 
             Debug.Log("-- GAME PRE-INITIALIZE --");
         }
@@ -121,7 +120,7 @@ namespace Assets.Scripts
                     Pause();
                     break;
                 case GameState.Initialized:
-                   // Pause();
+                    // Pause();
                     break;
                 case GameState.Stopped:
                     break;

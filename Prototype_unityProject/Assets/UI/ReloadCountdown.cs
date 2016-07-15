@@ -8,8 +8,7 @@ public class ReloadCountdown : MonoBehaviour
 
     private float _countdown;
     private Text _text;
-    bool isCoroutineStarted = false;
-
+    
     // Use this for initialization
     void Start()
     {

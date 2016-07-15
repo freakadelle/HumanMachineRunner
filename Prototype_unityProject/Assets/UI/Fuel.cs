@@ -4,11 +4,8 @@ using UnityEngine.UI;
 
 public class Fuel : MonoBehaviour
 {
-
     private Scrollbar _scrollbar;
-    private float _time;
-    private bool _isCoroutineStarted = false;
-    private int _timeToLooseFuel;
+
     public static float GetFuel { get; private set; }
     // Use this for initialization
     void Start()
@@ -33,13 +30,12 @@ public class Fuel : MonoBehaviour
     public static void FillFuel()
     {
         var scrollbar = GameObject.Find("Fuelbar").GetComponent<Scrollbar>();
-        var scrollbarSize = scrollbar.size + 0.1f;
+        var scrollbarSize = scrollbar.size + 0.2f;
         scrollbar.size = scrollbarSize;
     }
 
     IEnumerator ReduceFuel()
     {
-        _isCoroutineStarted = true;
         while (_scrollbar.size >= 0)
         {
             yield return new WaitForSeconds(3);

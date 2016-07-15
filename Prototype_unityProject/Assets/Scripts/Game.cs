@@ -33,14 +33,14 @@ namespace Assets.Scripts
         public AvatarController AvatarController;
 
         public static IUpdate ComponentWhereUpdateCallShouldBeExecuted;
-        public static string GetHighScore { get; set; }
 
+        public static string GetHighScore { get; set; }
 
         public void OnApplicationQuit()
         {
             _kinectController.Stop();
         }
-
+        
         public void Awake()
         {
             _kinectController = new KinectInputController(Path.Combine(Application.dataPath, "data"));

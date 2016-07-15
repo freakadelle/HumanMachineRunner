@@ -4,7 +4,6 @@ public class Batterie : MonoBehaviour
 {
 
     private GameObject _avatar;
-    private bool _isTriggered;
 
     // Use this for initialization
     void Start()

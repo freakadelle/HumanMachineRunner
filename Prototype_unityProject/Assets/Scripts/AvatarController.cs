@@ -13,7 +13,7 @@ public class AvatarController : MonoBehaviour
     public float StrafeValue = 10;
 
     public float GravityMultiplier = 30;
-    public int Speed = 150;
+    public int Speed = 7;
 
     private Vector2 _input;
     private CharacterController _controller;
@@ -59,7 +59,7 @@ public class AvatarController : MonoBehaviour
         _controllerHeight = _controller.height;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         ////////////////////////////// FUEL //////////////////////////////////////////
         GetFuel = Fuel.GetFuel;
@@ -73,8 +73,8 @@ public class AvatarController : MonoBehaviour
 
         Vector3 desiredMove = transform.forward * _input.y + transform.right * _input.x;
 
-        _moveDirection.x = desiredMove.x * Speed * Time.fixedDeltaTime;
-        _moveDirection.z = desiredMove.z * Speed * Time.fixedDeltaTime;
+        _moveDirection.x = desiredMove.x * Speed;
+        _moveDirection.z = desiredMove.z * Speed;
 
         if (_controller.isGrounded)
         {
@@ -101,7 +101,7 @@ public class AvatarController : MonoBehaviour
         }
         else
         {
-            _moveDirection += new Vector3(0, -3f, 0) * GravityMultiplier * Time.fixedDeltaTime;
+            _moveDirection += new Vector3(0, -3f, 0) * GravityMultiplier * Time.deltaTime;
         }
 
         /////////////////////////////// ROTATE //////////////////////////////////
@@ -125,7 +125,7 @@ public class AvatarController : MonoBehaviour
         }
         ///////////////////////////////////////////////////////////////////////////
 
-        _controller.Move(_moveDirection * Time.fixedDeltaTime);
+        _controller.Move(_moveDirection * Time.deltaTime);
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
@@ -158,7 +158,7 @@ public class AvatarController : MonoBehaviour
 
 
         /////////////////////////////// DRIVE /////////////////////////////////////
-        float vertical = Speed * Time.fixedDeltaTime;
+        float vertical = Speed;
         ///////////////////////////////////////////////////////////////////////////
 
 

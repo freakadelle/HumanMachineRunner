@@ -46,12 +46,12 @@ namespace Assets.Scripts
             _kinectController = new KinectInputController(Path.Combine(Application.dataPath, "data"));
 
             // Coded gestures
-            _kinectController.AddHardCodeGesture(new JumpGesture());
-            _kinectController.AddHardCodeGesture(new CrouchGesture());
+            //_kinectController.AddHardCodeGesture(new JumpGesture());
+            //_kinectController.AddHardCodeGesture(new CrouchGesture());
 
             // Gestures from KineticSpace via file
-            _kinectController.AddGesture("bend_right");
-            _kinectController.AddGesture("bend_left");
+            _kinectController.AddGesture("left");
+            _kinectController.AddGesture("right");
 
             try
             {
@@ -84,7 +84,7 @@ namespace Assets.Scripts
             if (_kinectConnected)
             {
                 // Handle Interface
-                ComponentWhereUpdateCallShouldBeExecuted.ExternalUpdateMethod();
+                //ComponentWhereUpdateCallShouldBeExecuted.ExternalUpdateMethod();
             }
         }
 

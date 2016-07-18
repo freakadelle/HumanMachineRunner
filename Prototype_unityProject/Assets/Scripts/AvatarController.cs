@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Scripts;
+using Assets.Scripts.Kinect;
 using UnityEngine;
 
 /*TODO: Keyboard Controls: A - rotate to left, D - rotate to right, C - duck, SPACE - jump, Left Arrow - strafe to left, Right Arrow - strafe to right
@@ -72,6 +73,7 @@ public class AvatarController : MonoBehaviour
         _input = GetInput();
 
         Vector3 desiredMove = transform.forward * _input.y + transform.right * _input.x;
+        //Vector3 desiredMove = transform.forward * _input.y;
 
         _moveDirection.x = desiredMove.x * Speed;
         _moveDirection.z = desiredMove.z * Speed;
@@ -81,7 +83,7 @@ public class AvatarController : MonoBehaviour
             _moveDirection.y = -StickToGroundForce;
 
             /////////////////////////////// JUMP /////////////////////////////////////
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump") || KinectInputController.KinectGestureState == KinectGestureStates.JUMPING)
             {
                 _moveDirection.y = GravityMultiplier;
             }
@@ -89,7 +91,7 @@ public class AvatarController : MonoBehaviour
             /////////////////////////////////////////////////////////////////////////
 
             ////////////////////////////// DUCK ////////////////////////////////////
-            if (Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.C) || KinectInputController.KinectGestureState == KinectGestureStates.DUCKING)
             {
                 Duck();
             }
@@ -106,7 +108,7 @@ public class AvatarController : MonoBehaviour
 
         /////////////////////////////// ROTATE //////////////////////////////////
         HandleAvatarRotation();
-        if (Input.GetKeyDown(KeyCode.A) && _dirtyFlag)
+        if ((Input.GetKeyDown(KeyCode.A) || KinectInputController.KinectGestureState == KinectGestureStates.ROT_LEFT) && _dirtyFlag)
         {
             _dirtyFlag = false;
             if (AvatarRotationState != AvatarRotation.Zero)
@@ -114,7 +116,7 @@ public class AvatarController : MonoBehaviour
             else
                 AvatarRotationState = AvatarRotation.ThreeHundredFifteen;
         }
-        if (Input.GetKeyDown(KeyCode.D) && _dirtyFlag)
+        if ((Input.GetKeyDown(KeyCode.D) || KinectInputController.KinectGestureState == KinectGestureStates.ROT_RIGHT) && _dirtyFlag)
         {
             _dirtyFlag = false;
             if (AvatarRotationState !=
@@ -125,6 +127,8 @@ public class AvatarController : MonoBehaviour
         }
         ///////////////////////////////////////////////////////////////////////////
 
+        //_controller.transform.position = new Vector3(KinectInputController.kinectHeadPos.X, _controller.transform.position.y, _controller.transform.position.z);
+        //_cameras.localPosition = new Vector3(KinectInputController.kinectHeadPos.X, _cameras.localPosition.y, _cameras.localPosition.z);
         _controller.Move(_moveDirection * Time.deltaTime);
     }
 
@@ -142,11 +146,11 @@ public class AvatarController : MonoBehaviour
         ///////////////////////////////////// STRAFE ///////////////////////////////
         float horizontal;
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) || KinectInputController.kinectMovingState == KinectMovingStates.MOV_LEFT)
         {
             horizontal = -StrafeValue;
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKey(KeyCode.RightArrow) || KinectInputController.kinectMovingState == KinectMovingStates.MOV_RIGHT)
         {
             horizontal = StrafeValue;
         }
@@ -154,6 +158,7 @@ public class AvatarController : MonoBehaviour
         {
             horizontal = 0;
         }
+
         ///////////////////////////////////////////////////////////////////////////
 
 
@@ -163,6 +168,7 @@ public class AvatarController : MonoBehaviour
 
 
         var input = new Vector2(horizontal, vertical);
+        //var input = new Vector2(0, vertical);
 
         // normalize input if it exceeds 1 in combined length:
         if (input.sqrMagnitude > 1)
@@ -181,7 +187,8 @@ public class AvatarController : MonoBehaviour
 
     private void StandUp()
     {
-        _cameras.localPosition = _camsPos;
+        //_cameras.localPosition = _camsPos;
+        _cameras.localPosition = new Vector3(_cameras.localPosition.x, _camsPos.y, _cameras.localPosition.z);
         _controller.height = _controllerHeight;
         _controller.center = _controllerCenter;
     }
